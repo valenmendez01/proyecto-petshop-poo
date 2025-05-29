@@ -1,26 +1,26 @@
 package cliente;
 
 public class HistorialMedico {
-    private int historialId;
+    private int idHistorial;
     private String fecha;
     private String descripcion;
     private String tratamiento;
     private int costo;
 
-    public HistorialMedico(int historialId, String fecha, String descripcion, String tratamiento, int costo) {
-        this.historialId = historialId;
+    public HistorialMedico(int idHistorial, String fecha, String descripcion, String tratamiento, int costo) {
+        this.idHistorial = idHistorial;
         this.fecha = fecha;
         this.descripcion = descripcion;
         this.tratamiento = tratamiento;
         this.costo = costo;
     }
 
-    public int getHistorialId() {
-        return historialId;
+    public int getIdHistorial() {
+        return idHistorial;
     }
 
-    public void setHistorialId(int historialId) {
-        this.historialId = historialId;
+    public void setIdHistorial(int idHistorial) {
+        this.idHistorial = idHistorial;
     }
 
     public String getFecha() {
@@ -58,7 +58,7 @@ public class HistorialMedico {
     @Override
     public String toString() {
         return "Historiales Medicos{" +
-                "historialId=" + historialId +
+                "idHistorial=" + idHistorial +
                 ", fecha='" + fecha + '\'' +
                 ", descripcion='" + descripcion + '\'' +
                 ", tratamiento='" + tratamiento + '\'' +

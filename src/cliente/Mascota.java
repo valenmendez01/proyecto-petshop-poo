@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Mascota {
-    private int id;
+    private int idMascota;
     private String nombre;
     private String especie;
     private String raza;
@@ -13,8 +13,8 @@ public class Mascota {
     private double peso;
     private List<HistorialMedico> historialMedico;
 
-    public Mascota(int id, String nombre, String especie, String raza, String sexo, int edad, double peso, List<HistorialMedico> historialMedico) {
-        this.id = id;
+    public Mascota(int idMascota, String nombre, String especie, String raza, String sexo, int edad, double peso, List<HistorialMedico> historialMedico) {
+        this.idMascota = idMascota;
         this.nombre = nombre;
         this.especie = especie;
         this.raza = raza;
@@ -24,12 +24,12 @@ public class Mascota {
         this.historialMedico = new ArrayList<>();
     }
 
-    public int getId() {
-        return id;
+    public int getIdMascota() {
+        return idMascota;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdMascota(int idMascota) {
+        this.idMascota = idMascota;
     }
 
     public String getNombre() {
@@ -92,15 +92,20 @@ public class Mascota {
         historialMedico.add(historial);
     }
 
-    public void eliminarHistorial(HistorialMedico historial){
-        historialMedico.remove(historial);
+    public void eliminarHistorial(int idHistorial){
+        for (HistorialMedico historial : historialMedico) {
+            if (historial.getIdHistorial() == idHistorial) {
+                historialMedico.remove(historial);
+                break;
+            }
+        }
     }
 
-    public void actualizarHistorial(int historialId, String nuevaFecha, String nuevaDescripcion,String nuevoTratamiento, int nuevoCosto){
+    public void actualizarHistorial(int idHistorial, String nuevaFecha, String nuevaDescripcion,String nuevoTratamiento, int nuevoCosto){
 
         for (HistorialMedico historial : historialMedico) {
 
-            if (historial.getHistorialId() == historialId) {
+            if (historial.getIdHistorial() == idHistorial) {
                 historial.setFecha(nuevaFecha);
                 historial.setDescripcion(nuevaDescripcion);
                 historial.setTratamiento(nuevoTratamiento);
