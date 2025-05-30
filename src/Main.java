@@ -19,11 +19,91 @@ public class Main {
             switch (opcion) {
                 case 1:
                     System.out.println("-> Gestión de clientes y mascotas seleccionada.");
-                    // Lógica: agregar cliente, editar, ver mascotas, etc.
+                    do {
+                        System.out.println("1. Agregar un nuevo cliente");
+                        System.out.println("2. Modificar datos del cliente");
+                        System.out.println("3. Eliminar cliente");
+                        System.out.println("4. Listar todos los clientes");
+                        System.out.println("----------------------");
+                        System.out.println("5. Registrar una nueva mascota para un cliente");
+                        System.out.println("6. Modificar datos de una mascota");
+                        System.out.println("7. Eliminar mascota");
+                        System.out.println("8. Listar mascotas de un cliente específico");
+                        System.out.println("----------------------");
+                        System.out.println("9.  Crear historial médico asociado a una mascota");
+                        System.out.println("10. Actualizar historial médico asociado a una mascota");
+                        System.out.println("11. Eliminar historial médico asociado a una mascota");
+                        System.out.println("12. Ver historial médico de una mascota");
+                        System.out.println("----------------------");
+                        System.out.println("13. Volver atrás");
+
+                        opcion = scanner.nextInt();
+
+                        switch (opcion) {
+                            case 1:
+                                break;
+                            case 2:
+                                break;
+                            case 3:
+                                // y mascotas asociadas
+                                break;
+                            case 4:
+                                break;
+                            case 5:
+                                // bucle para poder agregar varias mascotas por cliente
+                                break;
+                            case 6:
+                                break;
+                            case 7:
+                                break;
+                            case 8:
+                                break;
+                            case 9:
+                                break;
+                            case 10:
+                                break;
+                            case 11:
+                                break;
+                            case 12:
+                                break;
+                            default:
+                                System.out.println("Opción inválida. Intente nuevamente.");
+                        }
+                    } while (opcion != 13);
                     break;
                 case 2:
                     System.out.println("-> Gestión de citas seleccionada.");
-                    // Lógica: agendar, cancelar, ver citas, etc.
+                    do {
+                        System.out.println("1. Crear nueva cita");
+                        System.out.println("2. Modificar cita existente");
+                        System.out.println("3. Cancelar cita");
+                        System.out.println("4. Listar citas");
+                        System.out.println("----------------------");
+                        System.out.println("5. Volver atrás");
+
+                        opcion = scanner.nextInt();
+
+                        switch (opcion) {
+                            case 1:
+                                // seleccionar cliente - mascota
+                                // elegir servicio
+                                // mostrar disponibilidad fecha-hora
+                                // elegir fecha y hora
+                                // validar
+                                break;
+                            case 2:
+                                break;
+                            case 3:
+                                break;
+                            case 4:
+                                // ver todas las citas del día
+                                // filtrar por cliente o mascota
+                                // mostrar citas próximas
+                                break;
+                            default:
+                                System.out.println("Opción inválida. Intente nuevamente.");
+                        }
+                    } while (opcion != 5);
                     break;
                 case 3:
                     System.out.println("-> Registro de ventas seleccionado.");
