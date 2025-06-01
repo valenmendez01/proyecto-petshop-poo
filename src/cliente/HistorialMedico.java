@@ -1,14 +1,16 @@
 package cliente;
 
 public class HistorialMedico {
+    private static int contadorId = 1;
+
     private int idHistorial;
     private String fecha;
     private String descripcion;
     private String tratamiento;
     private int costo;
 
-    public HistorialMedico(int idHistorial, String fecha, String descripcion, String tratamiento, int costo) {
-        this.idHistorial = idHistorial;
+    public HistorialMedico(String fecha, String descripcion, String tratamiento, int costo) {
+        this.idHistorial = contadorId++;
         this.fecha = fecha;
         this.descripcion = descripcion;
         this.tratamiento = tratamiento;

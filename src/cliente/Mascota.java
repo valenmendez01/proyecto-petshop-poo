@@ -4,24 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Mascota {
+    private static int contadorId = 1;
+
     private int idMascota;
+    private List<HistorialMedico> historialMedico;
     private String nombre;
     private String especie;
     private String raza;
     private String sexo;
     private int edad;
     private double peso;
-    private List<HistorialMedico> historialMedico;
 
-    public Mascota(int idMascota, String nombre, String especie, String raza, String sexo, int edad, double peso, List<HistorialMedico> historialMedico) {
-        this.idMascota = idMascota;
+    public Mascota(String nombre, String especie, String raza, String sexo, int edad, double peso) {
+        this.idMascota = contadorId++;
+        this.historialMedico = new ArrayList<>();
         this.nombre = nombre;
         this.especie = especie;
         this.raza = raza;
         this.sexo = sexo;
         this.edad = edad;
         this.peso = peso;
-        this.historialMedico = new ArrayList<>();
     }
 
     public int getIdMascota() {

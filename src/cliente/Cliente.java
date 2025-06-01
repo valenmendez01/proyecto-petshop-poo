@@ -4,22 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cliente {
+    private static int contadorId = 1;
+
     private int idCliente;
+    private List<Mascota> mascotas;
     private String nombre;
     private String apellido;
     private String telefono;
     private String direccion;
-    private String fechaRegistro;
-    private List<Mascota> mascotas;
 
-    public Cliente(int idCliente, String nombre, String apellido, String telefono, String direccion, String fechaRegistro, List<Mascota> mascotas) {
-        this.idCliente = idCliente;
+    public Cliente(String nombre, String apellido, String telefono, String direccion) {
+        this.idCliente = contadorId++;
+        this.mascotas = new ArrayList<>();
         this.nombre = nombre;
         this.apellido = apellido;
         this.telefono = telefono;
         this.direccion = direccion;
-        this.fechaRegistro = fechaRegistro;
-        this.mascotas = new ArrayList<>();
     }
 
     public int getIdCliente() {
@@ -60,14 +60,6 @@ public class Cliente {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
-    }
-
-    public String getFechaRegistro() {
-        return fechaRegistro;
-    }
-
-    public void setFechaRegistro(String fechaRegistro) {
-        this.fechaRegistro = fechaRegistro;
     }
 
     public List<Mascota> getMascotas() {

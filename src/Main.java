@@ -1,3 +1,8 @@
+import cliente.Cliente;
+import cliente.Mascota;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -38,9 +43,22 @@ public class Main {
                         System.out.println("13. Volver atrás");
 
                         opcion = scanner.nextInt();
+                        scanner.nextLine();
 
                         switch (opcion) {
                             case 1:
+                                System.out.print("Ingrese el nombre del cliente: ");
+                                String nombreCliente = scanner.nextLine();
+                                System.out.print("Ingrese el apellido del cliente: ");
+                                String apellido = scanner.nextLine();
+                                System.out.print("Ingrese el teléfono del cliente: ");
+                                String telefono = scanner.nextLine();
+                                System.out.print("Ingrese la dirección del cliente: ");
+                                String direccion = scanner.nextLine();
+
+                                Cliente cliente = new Cliente(nombreCliente, apellido, telefono, direccion);
+                                System.out.println("Cliente creado con ID: " + cliente.getIdCliente());
+
                                 break;
                             case 2:
                                 break;
@@ -50,7 +68,31 @@ public class Main {
                             case 4:
                                 break;
                             case 5:
-                                // bucle para poder agregar varias mascotas por cliente
+                                int agregarOtra;
+                                do {
+                                    System.out.print("Ingrese el id del cliente asociado a la mascota a agregar: ");
+                                    int clienteId = scanner.nextInt();
+
+                                    System.out.print("Ingrese el nombre de la mascota: ");
+                                    String nombreMascota = scanner.nextLine();
+                                    System.out.print("Ingrese la especie de la mascota: ");
+                                    String especie = scanner.nextLine();
+                                    System.out.print("Ingrese la raza de la mascota: ");
+                                    String raza = scanner.nextLine();
+                                    System.out.print("Ingrese el sexo de la mascota: ");
+                                    String sexo = scanner.nextLine();
+                                    System.out.print("Ingrese la edad de la mascota: ");
+                                    int edad = scanner.nextInt();
+                                    System.out.print("Ingrese el peso de la mascota: ");
+                                    double peso = scanner.nextDouble();
+
+                                    Mascota mascota = new Mascota(nombreMascota, especie, raza, sexo, edad, peso);
+                                    System.out.println("Mascota creada con ID: " + mascota.getIdMascota());
+                                    //cliente.agregarMascota(mascota);
+
+                                    System.out.print("Desea agregar otra mascota? 0 para salir: ");
+                                    agregarOtra = scanner.nextInt();
+                                } while (agregarOtra != 0);
                                 break;
                             case 6:
                                 break;

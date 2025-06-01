@@ -9,7 +9,7 @@ import java.util.List;
 public class Agenda {
     private List<Turno> turnos;
 
-    public Agenda(List<Turno> turnos) {
+    public Agenda() {
         this.turnos = new ArrayList<>();
     }
 

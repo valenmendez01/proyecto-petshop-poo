@@ -4,6 +4,8 @@ import cliente.Mascota;
 import servicios.Servicio;
 
 public class Turno {
+    private static int contadorId = 1;
+
     private int idTurno;
     private Mascota mascota;
     private Servicio servicio;
@@ -11,8 +13,8 @@ public class Turno {
     private String horaInicio;
     private String horaFin;
 
-    public Turno(int idTurno, Mascota mascota, Servicio servicio, String fecha, String horaInicio, String horaFin) {
-        this.idTurno = idTurno;
+    public Turno(Mascota mascota, Servicio servicio, String fecha, String horaInicio, String horaFin) {
+        this.idTurno = contadorId++;
         this.mascota = mascota;
         this.servicio = servicio;
         this.fecha = fecha;
