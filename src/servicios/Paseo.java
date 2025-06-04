@@ -1,12 +1,12 @@
 package servicios;
 
-import cliente.Mascota;
+import agenda.Turno;
 
 public class Paseo extends Servicio {
     private boolean individual;
 
-    public Paseo(double precioBloque, String nombre, int cantidadBloques, Mascota mascota, boolean individual) {
-        super(precioBloque, nombre, cantidadBloques, mascota);
+    public Paseo(double precioBloque, String nombre, int cantidadBloques, boolean individual) {
+        super(precioBloque, nombre, cantidadBloques);
         this.individual = individual;
     }
 
@@ -18,10 +18,9 @@ public class Paseo extends Servicio {
         this.individual = individual;
     }
 
-    @Override
-    public double calcularCosto(){
+    public double calcularCosto(Turno turno){
 
-        String especie = mascota.getEspecie();
+        String especie = turno.getMascota().getEspecie();
 
         if (especie.equals("gato")) {
             precioBloque += 1000;

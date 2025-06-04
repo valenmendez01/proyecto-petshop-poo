@@ -3,6 +3,8 @@ package agenda;
 import cliente.Mascota;
 import servicios.Servicio;
 
+import java.util.List;
+
 public class Turno {
     private static int contadorId = 1;
 
@@ -70,10 +72,30 @@ public class Turno {
         this.horaFin = horaFin;
     }
 
+    public List<Turno> obtenerTurnosPorMascota(int idMascota){
+        return null; // completar
+    }
+
+    public void agregarTurnoArchivo(Turno turno, Mascota mascota, Servicio servicio, String fecha, String horaInicio, String horaFin){
+        // completar
+    }
+
+    public void eliminarTurnoArchivo(int idTurno) {
+        // completar
+    }
+
+    public void actualizarTurnoArchivo(int idTurno, Servicio servicio, String fechaNueva, String horaInicioNueva, String horaFinNueva){
+        // completar
+    }
+
+    public boolean verificarDisponibilidad(String fecha, String horaInicio, String horaFin){
+        // completar
+        return false;
+    }
+
     public void actualizarServicio(Servicio servicio){
         servicio.setNombre(this.servicio.getNombre());
         servicio.setPrecioBloque(this.servicio.getPrecioBloque());
         servicio.setCantidadBloques(this.servicio.getCantidadBloques());
-        servicio.setMascota(this.servicio.getMascota());
     }
 }

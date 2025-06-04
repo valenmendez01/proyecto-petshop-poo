@@ -1,18 +1,16 @@
 package servicios;
 
-import cliente.Mascota;
+import agenda.Turno;
 
 public abstract class Servicio {
     protected String nombre;
     protected double precioBloque;
     protected int cantidadBloques;
-    protected Mascota mascota;
 
-    public Servicio(double precioBloque, String nombre, int cantidadBloques, Mascota mascota) {
+    public Servicio(double precioBloque, String nombre, int cantidadBloques) {
         this.precioBloque = precioBloque;
         this.nombre = nombre;
         this.cantidadBloques = cantidadBloques;
-        this.mascota = mascota;
     }
 
     public String getNombre() {
@@ -39,13 +37,5 @@ public abstract class Servicio {
         this.cantidadBloques = cantidadBloques;
     }
 
-    public Mascota getMascota() {
-        return mascota;
-    }
-
-    public void setMascota(Mascota mascota) {
-        this.mascota = mascota;
-    }
-
-    public abstract double calcularCosto();
+    public abstract double calcularCosto(Turno turno);
 }
