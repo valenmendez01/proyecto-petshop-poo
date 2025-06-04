@@ -1,5 +1,6 @@
 package cliente;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,6 @@ public class Cliente {
     private static int contadorId = 1;
 
     private int idCliente;
-    private List<Mascota> mascotas;
     private String nombre;
     private String apellido;
     private String telefono;
@@ -15,7 +15,6 @@ public class Cliente {
 
     public Cliente(String nombre, String apellido, String telefono, String direccion) {
         this.idCliente = contadorId++;
-        this.mascotas = new ArrayList<>();
         this.nombre = nombre;
         this.apellido = apellido;
         this.telefono = telefono;
@@ -62,41 +61,89 @@ public class Cliente {
         this.direccion = direccion;
     }
 
-    public List<Mascota> getMascotas() {
-        return mascotas;
-    }
+    // Leer todos los clientes del archivo y ponerlos en una lista
+    public static ArrayList<String> cargarClientesArchivo(String ruta, String nombre) throws IOException {
+        ArrayList<String> clientes = new ArrayList<>();
+        File archivo = new File(ruta + nombre);
 
-    public void setMascotas(List<Mascota> mascotas) {
-        this.mascotas = mascotas;
-    }
-
-    public void agregarMascota(Mascota mascota){
-        mascotas.add(mascota);
-    }
-
-    public void eliminarMascota(int idMascota){
-        for (Mascota mascota : mascotas) {
-            if (mascota.getIdMascota() == idMascota) {
-                mascotas.remove(mascota);
-                break;
+        if (archivo.exists()) {
+            FileReader fr = new FileReader(archivo);
+            BufferedReader br = new BufferedReader(fr);
+            int n = Integer.parseInt(br.readLine());
+            for (int i = 0; i < n; i++) {
+                clientes.add(br.readLine());
             }
+            br.close();
+            fr.close();
+        }
+        return clientes;
+    }
+
+    // Guardar toda la lista de clientes al archivo
+    public static void guardarClienteArchivo(ArrayList<String> clientes, String ruta, String nombre) throws IOException {
+        File archivo = new File(ruta + nombre);
+        FileWriter fw = new FileWriter(archivo);
+        BufferedWriter bw = new BufferedWriter(fw);
+
+        bw.write("" + clientes.size());
+        bw.newLine();
+        for (int i = 0; i < clientes.size(); i++) {
+            bw.write(clientes.get(i));
+            bw.newLine();
+        }
+        bw.flush();
+        bw.close();
+        fw.close();
+    }
+
+    // Mostrar todos los clientes
+    public static void obtenerClientesArchivo(ArrayList<String> clientes) {
+        System.out.println("Clientes:");
+        for (int i = 0; i < clientes.size(); i++) {
+            System.out.println(clientes.get(i));
         }
     }
 
-    public void actualizarMascota(int idMascota, String nuevoNombre, String nuevaEspecie, String nuevaRaza, String nuevoSexo, int nuevaEdad, double nuevoPeso){
-
-        for (Mascota mascota : mascotas) {
-
-            if (mascota.getIdMascota() == idMascota) {
-                mascota.setNombre(nuevoNombre);
-                mascota.setEspecie(nuevaEspecie);
-                mascota.setRaza(nuevaRaza);
-                mascota.setSexo(nuevoSexo);
-                mascota.setEdad(nuevaEdad);
-                mascota.setPeso(nuevoPeso);
-                break;
-            }
-
-        }
+    // Agregar un cliente nuevo
+    public static void agregarClienteArchivo(ArrayList<String> clientes, String id, String nombre, String email) {
+        String nuevoCliente = id + "," + nombre + "," + email;
+        clientes.add(nuevoCliente);
     }
+
+    // Eliminar cliente por ID
+    public static boolean eliminarClienteArchivo(ArrayList<String> clientes, String id) {
+        for (int i = 0; i < clientes.size(); i++) {
+            String cliente = clientes.get(i);
+            String[] datos = cliente.split(",");
+            if (datos[0].equals(id)) {
+                clientes.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Actualizar cliente por ID
+    public static boolean actualizarClienteArchivo(ArrayList<String> clientes, String id, String nuevoNombre, String nuevoEmail) {
+        for (int i = 0; i < clientes.size(); i++) {
+            String cliente = clientes.get(i);
+            String[] datos = cliente.split(",");
+            if (datos[0].equals(id)) {
+                String clienteActualizado = id + "," + nuevoNombre + "," + nuevoEmail;
+                clientes.set(i, clienteActualizado);
+                return true;
+            }
+        }
+        return false;
+    }
+    // Leer del archivo
+    // ArrayList<String> clientes = leerClientes("c:/cosas/", "clientes.txt");
+
+    // Hacer operaciones
+    // agregarCliente(clientes, "3", "Carlos", "carlos@email.com");
+    // eliminarCliente(clientes, "1");
+    // actualizarCliente(clientes, "2", "Pedro López", "pedro@email.com");
+
+    // Guardar de vuelta
+    // guardarClientes(clientes, "c:/cosas/", "clientes.txt");
 }
