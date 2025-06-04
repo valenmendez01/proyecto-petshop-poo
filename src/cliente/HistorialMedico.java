@@ -57,14 +57,20 @@ public class HistorialMedico {
         this.costo = costo;
     }
 
-    @Override
-    public String toString() {
-        return "Historiales Medicos{" +
-                "idHistorial=" + idHistorial +
-                ", fecha='" + fecha + '\'' +
-                ", descripcion='" + descripcion + '\'' +
-                ", tratamiento='" + tratamiento + '\'' +
-                ", costo=" + costo +
-                '}';
+    public static void obtenerHistorialesArchivo() {
+        // completar
+    }
+
+    public static void agregarHistorialArchivo() {
+        // completar
+    }
+
+    public static void eliminarHistorialArchivo() {
+        // completar
+    }
+
+    public static boolean actualizarHistorialArchivo() {
+        // completar
+        return false;
     }
 }
