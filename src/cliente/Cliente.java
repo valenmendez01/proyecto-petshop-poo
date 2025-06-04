@@ -1,7 +1,5 @@
 package cliente;
 
-import java.util.ArrayList;
-
 public class Cliente {
     private static int contadorId = 1;
 
@@ -60,43 +58,24 @@ public class Cliente {
     }
 
     // Mostrar todos los clientes
-    public static void obtenerClientesArchivo(ArrayList<String> clientes) {
-        System.out.println("Clientes:");
-        for (int i = 0; i < clientes.size(); i++) {
-            System.out.println(clientes.get(i));
-        }
+    public static void obtenerClientesArchivo() {
+        // completar
     }
 
     // Agregar un cliente nuevo
-    public static void agregarClienteArchivo(ArrayList<String> clientes, String id, String nombre, String email) {
-        String nuevoCliente = id + "," + nombre + "," + email;
-        clientes.add(nuevoCliente);
+    public static void agregarClienteArchivo() {
+        // completar
     }
 
     // Eliminar cliente por ID
-    public static boolean eliminarClienteArchivo(ArrayList<String> clientes, String id) {
-        for (int i = 0; i < clientes.size(); i++) {
-            String cliente = clientes.get(i);
-            String[] datos = cliente.split(",");
-            if (datos[0].equals(id)) {
-                clientes.remove(i);
-                return true;
-            }
-        }
-        return false;
+    public static boolean eliminarClienteArchivo() {
+        // completar
+        return true;
     }
 
     // Actualizar cliente por ID
-    public static boolean actualizarClienteArchivo(ArrayList<String> clientes, String id, String nuevoNombre, String nuevoEmail) {
-        for (int i = 0; i < clientes.size(); i++) {
-            String cliente = clientes.get(i);
-            String[] datos = cliente.split(",");
-            if (datos[0].equals(id)) {
-                String clienteActualizado = id + "," + nuevoNombre + "," + nuevoEmail;
-                clientes.set(i, clienteActualizado);
-                return true;
-            }
-        }
+    public static boolean actualizarClienteArchivo() {
+        // completar
         return false;
     }
 }
