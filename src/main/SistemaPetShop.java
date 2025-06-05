@@ -121,10 +121,18 @@ public class SistemaPetShop {
                     Cliente.agregarClienteArchivo(scanner);
                     break;
                 case 2:
-                    Cliente.actualizarClienteArchivo(scanner);
+                    if (Cliente.actualizarClienteArchivo(scanner)){
+                        System.out.println("Cliente actualizado con éxito");
+                    } else {
+                        System.out.println("Cliente no encontrado");
+                    }
                     break;
                 case 3:
-                    Cliente.eliminarClienteArchivo(scanner);
+                    if (Cliente.eliminarClienteArchivo(scanner)){
+                        System.out.println("Cliente eliminado con éxito");
+                    } else {
+                        System.out.println("Cliente no encontrado");
+                    }
                     break;
                 case 4:
                     List<Cliente> clientes = Cliente.obtenerClientesArchivo();
@@ -132,6 +140,10 @@ public class SistemaPetShop {
                     if (clientes.isEmpty()) {
                         System.out.println("No hay clientes registrados.");
                         return;
+                    } else {
+                        for (Cliente cliente : clientes) {
+                            System.out.println(cliente.toString());
+                        }
                     }
                     break;
                 case 5:

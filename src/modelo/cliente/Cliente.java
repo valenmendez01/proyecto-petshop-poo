@@ -67,7 +67,7 @@ public class Cliente {
     // Metodo para obtener todos los clientes del archivo
     public static List<Cliente> obtenerClientesArchivo() {
         List<Cliente> clientes = new ArrayList<Cliente>();
-        File archivo = new File("datos/clientes.txt");
+        File archivo = new File("src/datos/clientes.txt");
 
         // Si el archivo no existe, devolver lista vacía
         if (!archivo.exists()) {
@@ -78,25 +78,16 @@ public class Cliente {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
             String linea;
-            int maxId = 0;
 
             while ((linea = reader.readLine()) != null) {
                 String[] datos = linea.split(",");
-                if (datos.length == 5) { // Validar que tenga todos los campos
+                if (datos.length == 5) {
                     Cliente c = new Cliente(datos[1], datos[2], datos[3], datos[4]);
                     int id = Integer.parseInt(datos[0]);
                     c.setIdCliente(id);
                     clientes.add(c);
-
-                    // Actualizar el contador para mantener IDs únicos
-                    if (id > maxId) {
-                        maxId = id;
-                    }
                 }
             }
-
-            // Actualizar el contador global
-            contadorId = maxId + 1;
 
         } catch (IOException | NumberFormatException e) {
             System.out.println("Error al leer clientes: " + e.getMessage());
@@ -107,6 +98,7 @@ public class Cliente {
 
     // Agregar un cliente nuevo
     public static void agregarClienteArchivo(Scanner scanner) {
+        inicializarContadorId();
 
         System.out.print("Ingrese el nombre del cliente: ");
         String nombreCliente = scanner.nextLine();
@@ -119,7 +111,7 @@ public class Cliente {
 
         Cliente cliente = new Cliente(nombreCliente, apellido, telefono, direccion);
 
-        File archivo = new File("datos/clientes.txt");
+        File archivo = new File("src/datos/clientes.txt");
         // Crear directorio si no existe
         archivo.getParentFile().mkdirs();
 
@@ -136,29 +128,11 @@ public class Cliente {
         System.out.println("Cliente creado con ID: " + cliente.getIdCliente());
     }
 
-    // Buscar cliente por ID
-    public static Cliente buscarClientePorId(int idCliente) {
-        List<Cliente> clientes = obtenerClientesArchivo();
-        for (Cliente cliente : clientes) {
-            if (cliente.getIdCliente() == idCliente) {
-                return cliente;
-            }
-        }
-        return null;
-    }
-
     // Eliminar cliente por ID
     public static boolean eliminarClienteArchivo(Scanner scanner) {
         System.out.print("Ingrese el ID del cliente a eliminar: ");
         int idEliminar = scanner.nextInt();
 
-        Cliente cliente3 = Cliente.buscarClientePorId(idEliminar);
-        if (cliente3 == null) {
-            System.out.println("Cliente no encontrado.");
-            return false;
-        }
-
-        System.out.println("Cliente a eliminar: " + cliente3);
         System.out.print("¿Está seguro? (s/n): ");
         scanner.nextLine(); // Limpiar buffer
         String confirmacion = scanner.nextLine();
@@ -168,8 +142,8 @@ public class Cliente {
             Mascota.eliminarMascotasPorCliente(idEliminar);
             // Los historiales se eliminan automáticamente al eliminar las mascotas
 
-            File inputFile = new File("datos/clientes.txt");
-            File tempFile = new File("datos/clientes_temp.txt");
+            File inputFile = new File("src/datos/clientes.txt");
+            File tempFile = new File("src/datos/clientes_temp.txt");
 
             if (!inputFile.exists()) {
                 return false;
@@ -205,11 +179,8 @@ public class Cliente {
                 tempFile.delete(); // Limpiar archivo temporal si no se eliminó nada
             }
 
-            if (eliminado) {
-                System.out.println("Cliente eliminado exitosamente (junto con sus mascotas e historiales).");
-            }
-
             return eliminado;
+
         } else {
             System.out.println("Eliminación cancelada.");
             return false;
@@ -218,32 +189,23 @@ public class Cliente {
 
     // Actualizar cliente por ID
     public static boolean actualizarClienteArchivo(Scanner scanner) {
+
+        System.out.print("Nuevo nombre: ");
+        String nombre = scanner.nextLine();
+        System.out.print("Nuevo apellido: ");
+        String apellido = scanner.nextLine();
+        System.out.print("Nuevo teléfono: ");
+        String telefono = scanner.nextLine();
+        System.out.print("Nueva dirección: ");
+        String direccion = scanner.nextLine();
+        Cliente cliente = new Cliente(nombre, apellido, telefono, direccion);
+
         System.out.print("Ingrese el ID del cliente a modificar: ");
         int id = scanner.nextInt();
         scanner.nextLine();
 
-        Cliente cliente = Cliente.buscarClientePorId(id);
-        if (cliente == null) {
-            System.out.println("Cliente no encontrado.");
-        }
-
-        System.out.println("Cliente actual: " + cliente);
-        System.out.print("Nuevo nombre (actual: " + cliente.getNombre() + "): ");
-        String nombre = scanner.nextLine();
-        System.out.print("Nuevo apellido (actual: " + cliente.getApellido() + "): ");
-        String apellido2 = scanner.nextLine();
-        System.out.print("Nuevo teléfono (actual: " + cliente.getTelefono() + "): ");
-        String telefono2 = scanner.nextLine();
-        System.out.print("Nueva dirección (actual: " + cliente.getDireccion() + "): ");
-        String direccion2 = scanner.nextLine();
-
-        if (!nombre.isEmpty()) cliente.setNombre(nombre);
-        if (!apellido2.isEmpty()) cliente.setApellido(apellido2);
-        if (!telefono2.isEmpty()) cliente.setTelefono(telefono2);
-        if (!direccion2.isEmpty()) cliente.setDireccion(direccion2);
-
-        File inputFile = new File("datos/clientes.txt");
-        File tempFile = new File("datos/clientes_temp.txt");
+        File inputFile = new File("src/datos/clientes.txt");
+        File tempFile = new File("src/datos/clientes_temp.txt");
 
         if (!inputFile.exists()) {
             return false;
@@ -258,10 +220,8 @@ public class Cliente {
             while ((linea = reader.readLine()) != null) {
                 String[] datos = linea.split(",");
                 if (datos.length == 5) {
-                    int id2 = Integer.parseInt(datos[0]);
-
-                    if (id2 == cliente.getIdCliente()) {
-                        writer.write(cliente.getIdCliente() + "," +
+                    if (id == Integer.parseInt(datos[0])) {
+                        writer.write(id + "," +
                                 cliente.getNombre() + "," +
                                 cliente.getApellido() + "," +
                                 cliente.getTelefono() + "," +
@@ -272,7 +232,6 @@ public class Cliente {
                     }
                 }
             }
-            System.out.println("Cliente actualizado exitosamente.");
 
         } catch (IOException | NumberFormatException e) {
             System.out.println("Error: " + e.getMessage());
@@ -289,14 +248,38 @@ public class Cliente {
         return actualizado;
     }
 
+    public static void inicializarContadorId() {
+        File archivo = new File("src/datos/clientes.txt");
+
+        int maxId = 0;
+
+        if (archivo.exists()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
+                String linea;
+                while ((linea = reader.readLine()) != null) {
+                    String[] partes = linea.split(",");
+                    if (partes.length >= 1) {
+                        int id = Integer.parseInt(partes[0]);
+                        if (id > maxId) {
+                            maxId = id;
+                        }
+                    }
+                }
+            } catch (IOException | NumberFormatException e) {
+                System.out.println("Error al leer IDs del archivo: " + e.getMessage());
+            }
+        }
+
+        contadorId = maxId + 1;
+    }
+
+
     @Override
     public String toString() {
-        return "Cliente{" +
-                "idCliente=" + idCliente +
-                ", nombre='" + nombre + '\'' +
-                ", apellido='" + apellido + '\'' +
-                ", telefono='" + telefono + '\'' +
-                ", direccion='" + direccion + '\'' +
-                '}';
+        return "-- ID: " + idCliente +
+                ", nombre: " + nombre +
+                ", apellido: " + apellido +
+                ", telefono: " + telefono +
+                ", direccion: " + direccion;
     }
 }
