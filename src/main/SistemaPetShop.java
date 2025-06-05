@@ -170,7 +170,7 @@ public class SistemaPetShop {
                     }
                     break;
                 case 8:
-                    List<Mascota> mascotas = Mascota.obtenerMascotasPorCliente(scanner);
+                    List<Mascota> mascotas = Mascota.obtenerMascotasArchivo();
 
                     if (mascotas.isEmpty()) {
                         System.out.println("No hay mascotas registradas.");

@@ -135,7 +135,12 @@ public class Cliente {
 
         if (confirmacion.equalsIgnoreCase("s")) {
             // Eliminar también las mascotas y historiales asociados
-            Mascota.eliminarMascotasPorIdCliente(idEliminar);
+            if (Mascota.eliminarMascotasPorIdCliente(idEliminar)){
+                System.out.println("Mascota asociada al cliente eliminada");
+            } else {
+                System.out.println("Error al eliminar a la mascota asociada al cliente");
+            }
+
             // Los historiales se eliminan automáticamente al eliminar las mascotas
 
             File inputFile = new File("src/datos/clientes.txt");

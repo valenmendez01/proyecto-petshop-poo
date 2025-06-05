@@ -94,11 +94,6 @@ public class Mascota {
         this.peso = peso;
     }
 
-    // Metodo para obtener todos los historiales médicos de esta mascota
-    public List<HistorialMedico> obtenerHistoriales() {
-        return HistorialMedico.obtenerHistorialesPorMascota(this.idMascota);
-    }
-
     // Obtener todas las mascotas del archivo
     public static List<Mascota> obtenerMascotasArchivo() {
         List<Mascota> mascotas = new ArrayList<Mascota>();
@@ -244,17 +239,6 @@ public class Mascota {
         }
 
         return mascotas;
-    }
-
-    // Buscar mascota por ID
-    public static Mascota buscarMascotaPorId(int idMascota) {
-        List<Mascota> mascotas = obtenerMascotasArchivo();
-        for (Mascota mascota : mascotas) {
-            if (mascota.getIdMascota() == idMascota) {
-                return mascota;
-            }
-        }
-        return null;
     }
 
     // Eliminar mascota por ID. Se usa desde el main, por lo que hay que buscar el cliente que corresponda
