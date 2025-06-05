@@ -1,8 +1,8 @@
-package servicios;
+package modelo.servicios;
 
-import agenda.Turno;
+import modelo.agenda.Turno;
 
-public class Veterinaria extends Servicio {
+public abstract class Veterinaria extends Servicio {
     private boolean esUrgencia;
 
     public Veterinaria(double precioBloque, String nombre, int cantidadBloques, boolean esUrgencia) {
@@ -21,7 +21,7 @@ public class Veterinaria extends Servicio {
     @Override
     public double calcularCosto(Turno turno){
 
-        String especie = turno.getMascota().getEspecie();
+        String especie = "gato"; // turno.getMascota().getEspecie();
 
         if (especie.equals("gato")) {
             precioBloque += 1000;

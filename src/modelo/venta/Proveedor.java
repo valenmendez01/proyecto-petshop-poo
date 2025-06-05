@@ -1,4 +1,5 @@
-package Venta;
+/*
+package modelo.venta;
 
 import Producto.Producto;
 
@@ -64,6 +65,5 @@ public class Proveedor {
                 .findFirst()
                 .orElse(null);
     }
-
-
 }
+ */

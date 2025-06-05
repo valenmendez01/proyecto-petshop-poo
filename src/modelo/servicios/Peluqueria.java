@@ -1,6 +1,6 @@
-package servicios;
+package modelo.servicios;
 
-import agenda.Turno;
+import modelo.agenda.Turno;
 
 public class Peluqueria extends Servicio {
     private boolean incluyeCorteUnas;
@@ -20,7 +20,7 @@ public class Peluqueria extends Servicio {
 
     public double calcularCosto(Turno turno){
 
-        String especie = turno.getMascota().getEspecie();
+        String especie = "gato"; // turno.getMascota().getEspecie();
 
         if (especie.equals("gato")) {
             precioBloque += 1000;

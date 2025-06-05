@@ -1,6 +1,6 @@
 package modelo.agenda;
 
-import servicios.Servicio;
+import modelo.servicios.Servicio;
 
 import java.util.List;
 

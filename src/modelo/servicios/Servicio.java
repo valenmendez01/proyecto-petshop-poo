@@ -1,6 +1,6 @@
-package servicios;
+package modelo.servicios;
 
-import agenda.Turno;
+import modelo.agenda.Turno;
 
 public abstract class Servicio {
     protected String nombre;

@@ -155,6 +155,7 @@ public class Cliente {
         Cliente cliente3 = Cliente.buscarClientePorId(idEliminar);
         if (cliente3 == null) {
             System.out.println("Cliente no encontrado.");
+            return false;
         }
 
         System.out.println("Cliente a eliminar: " + cliente3);
@@ -209,6 +210,9 @@ public class Cliente {
             }
 
             return eliminado;
+        } else {
+            System.out.println("Eliminación cancelada.");
+            return false;
         }
     };
 

@@ -1,6 +1,7 @@
-package Venta;
+/*
+package modelo.venta;
 
-import cliente.Cliente;
+import modelo.cliente.Cliente;
 
 import java.util.Date;
 import java.util.List;
@@ -70,5 +71,5 @@ public class Venta {
         };
         return total;
     }
-
 }
+ */

@@ -1,4 +1,5 @@
-package Venta;
+/*
+package modelo.venta;
 
 import Producto.Producto;
 
@@ -45,3 +46,4 @@ public class PedidoProveedor {
         this.id = id;
     }
 }
+ */
