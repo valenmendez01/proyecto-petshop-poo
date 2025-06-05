@@ -1,9 +1,9 @@
 package modelo.cliente;
 
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Cliente {
     private static int contadorId = 1;
@@ -64,13 +64,20 @@ public class Cliente {
         this.direccion = direccion;
     }
 
+    // Metodo para obtener todas las mascotas de este cliente
+    public List<Mascota> obtenerMascotas() {
+        return Mascota.obtenerMascotasPorCliente(this.idCliente);
+    }
+
     // Metodo para obtener todos los clientes del archivo
     public static List<Cliente> obtenerClientesArchivo() {
         List<Cliente> clientes = new ArrayList<Cliente>();
-        File archivo = new File("clientes.txt");
+        File archivo = new File("datos/clientes.txt");
 
         // Si el archivo no existe, devolver lista vacía
         if (!archivo.exists()) {
+            // Crear directorio si no existe
+            archivo.getParentFile().mkdirs();
             return clientes;
         }
 
@@ -103,9 +110,25 @@ public class Cliente {
         return clientes;
     }
 
-    // Agregar un modelo.cliente nuevo
-    public static void agregarClienteArchivo(Cliente cliente) {
-        try (FileWriter writer = new FileWriter("clientes.txt", true)) {
+    // Agregar un cliente nuevo
+    public static void agregarClienteArchivo(Scanner scanner) {
+
+        System.out.print("Ingrese el nombre del cliente: ");
+        String nombreCliente = scanner.nextLine();
+        System.out.print("Ingrese el apellido del cliente: ");
+        String apellido = scanner.nextLine();
+        System.out.print("Ingrese el teléfono del cliente: ");
+        String telefono = scanner.nextLine();
+        System.out.print("Ingrese la dirección del cliente: ");
+        String direccion = scanner.nextLine();
+
+        Cliente cliente = new Cliente(nombreCliente, apellido, telefono, direccion);
+
+        File archivo = new File("datos/clientes.txt");
+        // Crear directorio si no existe
+        archivo.getParentFile().mkdirs();
+
+        try (FileWriter writer = new FileWriter(archivo, true)) {
             writer.write(cliente.idCliente + "," +
                     cliente.nombre + "," +
                     cliente.apellido + "," +
@@ -114,9 +137,11 @@ public class Cliente {
         } catch (IOException e) {
             System.out.println("Error al escribir el archivo: " + e.getMessage());
         }
+
+        System.out.println("Cliente creado con ID: " + cliente.getIdCliente());
     }
 
-    // Buscar modelo.cliente por ID
+    // Buscar cliente por ID
     public static Cliente buscarClientePorId(int idCliente) {
         List<Cliente> clientes = obtenerClientesArchivo();
         for (Cliente cliente : clientes) {
@@ -127,52 +152,99 @@ public class Cliente {
         return null;
     }
 
-    // Eliminar modelo.cliente por ID
-    public static boolean eliminarClienteArchivo(int idEliminar) {
-        File inputFile = new File("clientes.txt");
-        File tempFile = new File("clientes_temp.txt");
+    // Eliminar cliente por ID
+    public static boolean eliminarClienteArchivo(Scanner scanner) {
+        System.out.print("Ingrese el ID del cliente a eliminar: ");
+        int idEliminar = scanner.nextInt();
 
-        if (!inputFile.exists()) {
-            return false;
+        Cliente cliente3 = Cliente.buscarClientePorId(idEliminar);
+        if (cliente3 == null) {
+            System.out.println("Cliente no encontrado.");
         }
 
-        boolean eliminado = false;
+        System.out.println("Cliente a eliminar: " + cliente3);
+        System.out.print("¿Está seguro? (s/n): ");
+        scanner.nextLine(); // Limpiar buffer
+        String confirmacion = scanner.nextLine();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+        if (confirmacion.equalsIgnoreCase("s")) {
+            // Eliminar también las mascotas y historiales asociados
+            Mascota.eliminarMascotasPorCliente(idEliminar);
+            // Los historiales se eliminan automáticamente al eliminar las mascotas
 
-            String linea;
-            while ((linea = reader.readLine()) != null) {
-                String[] datos = linea.split(",");
-                if (datos.length == 5) {
-                    int id = Integer.parseInt(datos[0]);
-                    if (id != idEliminar) {
-                        writer.write(linea + "\n");
-                    } else {
-                        eliminado = true;
-                    }
-                }
+            File inputFile = new File("datos/clientes.txt");
+            File tempFile = new File("datos/clientes_temp.txt");
+
+            if (!inputFile.exists()) {
+                return false;
             }
 
-        } catch (IOException | NumberFormatException e) {
-            System.out.println("Error: " + e.getMessage());
-            return false;
+            boolean eliminado = false;
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+                 BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+
+                String linea;
+                while ((linea = reader.readLine()) != null) {
+                    String[] datos = linea.split(",");
+                    if (datos.length == 5) {
+                        int id = Integer.parseInt(datos[0]);
+                        if (id != idEliminar) {
+                            writer.write(linea + "\n");
+                        } else {
+                            eliminado = true;
+                        }
+                    }
+                }
+
+            } catch (IOException | NumberFormatException e) {
+                System.out.println("Error: " + e.getMessage());
+                return false;
+            }
+
+            // Reemplazar archivo original
+            if (eliminado && inputFile.delete()) {
+                tempFile.renameTo(inputFile);
+            } else if (!eliminado) {
+                tempFile.delete(); // Limpiar archivo temporal si no se eliminó nada
+            }
+
+            if (eliminado) {
+                System.out.println("Cliente eliminado exitosamente (junto con sus mascotas e historiales).");
+            }
+
+            return eliminado;
+        }
+    };
+
+    // Actualizar cliente por ID
+    public static boolean actualizarClienteArchivo(Scanner scanner) {
+        System.out.print("Ingrese el ID del cliente a modificar: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        Cliente cliente = Cliente.buscarClientePorId(id);
+        if (cliente == null) {
+            System.out.println("Cliente no encontrado.");
         }
 
-        // Reemplazar archivo original
-        if (eliminado && inputFile.delete()) {
-            tempFile.renameTo(inputFile);
-        } else if (!eliminado) {
-            tempFile.delete(); // Limpiar archivo temporal si no se eliminó nada
-        }
+        System.out.println("Cliente actual: " + cliente);
+        System.out.print("Nuevo nombre (actual: " + cliente.getNombre() + "): ");
+        String nombre = scanner.nextLine();
+        System.out.print("Nuevo apellido (actual: " + cliente.getApellido() + "): ");
+        String apellido2 = scanner.nextLine();
+        System.out.print("Nuevo teléfono (actual: " + cliente.getTelefono() + "): ");
+        String telefono2 = scanner.nextLine();
+        System.out.print("Nueva dirección (actual: " + cliente.getDireccion() + "): ");
+        String direccion2 = scanner.nextLine();
 
-        return eliminado;
-    }
+        if (!nombre.isEmpty()) cliente.setNombre(nombre);
+        if (!apellido2.isEmpty()) cliente.setApellido(apellido2);
+        if (!telefono2.isEmpty()) cliente.setTelefono(telefono2);
+        if (!direccion2.isEmpty()) cliente.setDireccion(direccion2);
 
-    // Actualizar modelo.cliente por ID
-    public static boolean actualizarClienteArchivo(Cliente clienteActualizado) {
-        File inputFile = new File("clientes.txt");
-        File tempFile = new File("clientes_temp.txt");
+        File inputFile = new File("datos/clientes.txt");
+        File tempFile = new File("datos/clientes_temp.txt");
 
         if (!inputFile.exists()) {
             return false;
@@ -187,20 +259,21 @@ public class Cliente {
             while ((linea = reader.readLine()) != null) {
                 String[] datos = linea.split(",");
                 if (datos.length == 5) {
-                    int id = Integer.parseInt(datos[0]);
+                    int id2 = Integer.parseInt(datos[0]);
 
-                    if (id == clienteActualizado.getIdCliente()) {
-                        writer.write(clienteActualizado.getIdCliente() + "," +
-                                clienteActualizado.getNombre() + "," +
-                                clienteActualizado.getApellido() + "," +
-                                clienteActualizado.getTelefono() + "," +
-                                clienteActualizado.getDireccion() + "\n");
+                    if (id2 == cliente.getIdCliente()) {
+                        writer.write(cliente.getIdCliente() + "," +
+                                cliente.getNombre() + "," +
+                                cliente.getApellido() + "," +
+                                cliente.getTelefono() + "," +
+                                cliente.getDireccion() + "\n");
                         actualizado = true;
                     } else {
                         writer.write(linea + "\n");
                     }
                 }
             }
+            System.out.println("Cliente actualizado exitosamente.");
 
         } catch (IOException | NumberFormatException e) {
             System.out.println("Error: " + e.getMessage());

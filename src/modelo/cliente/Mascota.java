@@ -93,13 +93,20 @@ public class Mascota {
         this.peso = peso;
     }
 
+    // Metodo para obtener todos los historiales médicos de esta mascota
+    public List<HistorialMedico> obtenerHistoriales() {
+        return HistorialMedico.obtenerHistorialesPorMascota(this.idMascota);
+    }
+
     // Obtener todas las mascotas del archivo
     public static List<Mascota> obtenerMascotasArchivo() {
         List<Mascota> mascotas = new ArrayList<Mascota>();
-        File archivo = new File("mascotas.txt");
+        File archivo = new File("datos/mascotas.txt");
 
         // Si el archivo no existe, devolver lista vacía
         if (!archivo.exists()) {
+            // Crear directorio si no existe
+            archivo.getParentFile().mkdirs();
             return mascotas;
         }
 
@@ -144,7 +151,11 @@ public class Mascota {
 
     // Agregar una mascota nueva
     public static void agregarMascotaArchivo(Mascota mascota) {
-        try (FileWriter writer = new FileWriter("mascotas.txt", true)) {
+        File archivo = new File("datos/mascotas.txt");
+        // Crear directorio si no existe
+        archivo.getParentFile().mkdirs();
+
+        try (FileWriter writer = new FileWriter(archivo, true)) {
             writer.write(mascota.getIdMascota() + "," +
                     mascota.getIdCliente() + "," +
                     mascota.getNombre() + "," +
@@ -158,10 +169,10 @@ public class Mascota {
         }
     }
 
-    // Obtener mascotas por modelo.cliente específico
+    // Obtener mascotas por cliente específico
     public static List<Mascota> obtenerMascotasPorCliente(int idCliente) {
         List<Mascota> mascotas = new ArrayList<Mascota>();
-        File archivo = new File("mascotas.txt");
+        File archivo = new File("datos/mascotas.txt");
 
         if (!archivo.exists()) {
             return mascotas;
@@ -210,8 +221,8 @@ public class Mascota {
 
     // Eliminar mascota por ID
     public static boolean eliminarMascotaArchivo(int idEliminar) {
-        File inputFile = new File("mascotas.txt");
-        File tempFile = new File("mascotas_temp.txt");
+        File inputFile = new File("datos/mascotas.txt");
+        File tempFile = new File("datos/mascotas_temp.txt");
 
         if (!inputFile.exists()) {
             return false;
@@ -250,10 +261,10 @@ public class Mascota {
         return eliminado;
     }
 
-    // Eliminar todas las mascotas de un modelo.cliente específico
+    // Eliminar todas las mascotas de un cliente específico
     public static boolean eliminarMascotasPorCliente(int idCliente) {
-        File inputFile = new File("mascotas.txt");
-        File tempFile = new File("mascotas_temp.txt");
+        File inputFile = new File("datos/mascotas.txt");
+        File tempFile = new File("datos/mascotas_temp.txt");
 
         if (!inputFile.exists()) {
             return false;
@@ -294,8 +305,8 @@ public class Mascota {
 
     // Actualizar mascota por ID
     public static boolean actualizarMascotaArchivo(Mascota mascotaActualizada) {
-        File inputFile = new File("mascotas.txt");
-        File tempFile = new File("mascotas_temp.txt");
+        File inputFile = new File("datos/mascotas.txt");
+        File tempFile = new File("datos/mascotas_temp.txt");
 
         if (!inputFile.exists()) {
             return false;

@@ -3,6 +3,7 @@ package main;
 import modelo.cliente.Cliente;
 import modelo.cliente.Mascota;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class SistemaPetShop {
@@ -25,15 +26,15 @@ public class SistemaPetShop {
                 case 1:
                     System.out.println("-> Gestión de clientes y mascotas seleccionada.");
                     do {
-                        System.out.println("1. Agregar un nuevo modelo.cliente");
-                        System.out.println("2. Modificar datos del modelo.cliente");
-                        System.out.println("3. Eliminar modelo.cliente");
+                        System.out.println("1. Agregar un nuevo cliente");
+                        System.out.println("2. Modificar datos del cliente");
+                        System.out.println("3. Eliminar cliente");
                         System.out.println("4. Listar todos los clientes");
                         System.out.println("----------------------");
-                        System.out.println("5. Registrar una nueva mascota para un modelo.cliente");
+                        System.out.println("5. Registrar una nueva mascota para un cliente");
                         System.out.println("6. Modificar datos de una mascota");
                         System.out.println("7. Eliminar mascota");
-                        System.out.println("8. Listar mascotas de un modelo.cliente específico");
+                        System.out.println("8. Listar mascotas de un cliente específico");
                         System.out.println("----------------------");
                         System.out.println("9.  Crear historial médico asociado a una mascota");
                         System.out.println("10. Actualizar historial médico asociado a una mascota");
@@ -46,31 +47,32 @@ public class SistemaPetShop {
                         scanner.nextLine();
 
                         switch (opcion) {
+
                             case 1:
-                                System.out.print("Ingrese el nombre del modelo.cliente: ");
-                                String nombreCliente = scanner.nextLine();
-                                System.out.print("Ingrese el apellido del modelo.cliente: ");
-                                String apellido = scanner.nextLine();
-                                System.out.print("Ingrese el teléfono del modelo.cliente: ");
-                                String telefono = scanner.nextLine();
-                                System.out.print("Ingrese la dirección del modelo.cliente: ");
-                                String direccion = scanner.nextLine();
-
-                                Cliente cliente = new Cliente(nombreCliente, apellido, telefono, direccion);
-                                System.out.println("Cliente creado con ID: " + cliente.getIdCliente());
-
+                                Cliente.agregarClienteArchivo(scanner);
                                 break;
+
                             case 2:
+                                Cliente.actualizarClienteArchivo(scanner);
                                 break;
+
                             case 3:
-                                // y mascotas asociadas
+                                Cliente.eliminarClienteArchivo(scanner);
                                 break;
+
                             case 4:
+                                List<Cliente> clientes = Cliente.obtenerClientesArchivo();
+
+                                if (clientes.isEmpty()) {
+                                    System.out.println("No hay clientes registrados.");
+                                    return;
+                                }
                                 break;
+
                             case 5:
                                 int agregarOtra;
                                 do {
-                                    System.out.print("Ingrese el id del modelo.cliente asociado a la mascota a agregar: ");
+                                    System.out.print("Ingrese el id del cliente asociado a la mascota a agregar: ");
                                     int clienteId = scanner.nextInt();
 
                                     System.out.print("Ingrese el nombre de la mascota: ");
@@ -86,9 +88,9 @@ public class SistemaPetShop {
                                     System.out.print("Ingrese el peso de la mascota: ");
                                     double peso = scanner.nextDouble();
 
-                                    Mascota mascota = new Mascota(nombreMascota, especie, raza, sexo, edad, peso);
-                                    System.out.println("Mascota creada con ID: " + mascota.getIdMascota());
-                                    //modelo.cliente.agregarMascota(mascota);
+                                    //Mascota mascota = new Mascota(nombreMascota, especie, raza, sexo, edad, peso);
+                                    //System.out.println("Mascota creada con ID: " + mascota.getIdMascota());
+                                    //cliente.agregarMascota(mascota);
 
                                     System.out.print("Desea agregar otra mascota? 0 para salir: ");
                                     agregarOtra = scanner.nextInt();
@@ -127,7 +129,7 @@ public class SistemaPetShop {
 
                         switch (opcion) {
                             case 1:
-                                // seleccionar modelo.cliente - mascota
+                                // seleccionar cliente - mascota
                                 // elegir servicio
                                 // mostrar disponibilidad fecha-hora
                                 // elegir fecha y hora
@@ -139,7 +141,7 @@ public class SistemaPetShop {
                                 break;
                             case 4:
                                 // ver todas las citas del día
-                                // filtrar por modelo.cliente o mascota
+                                // filtrar por cliente o mascota
                                 // mostrar citas próximas
                                 break;
                             default:
@@ -170,8 +172,8 @@ public class SistemaPetShop {
 
 /*
 case x:
-    System.out.println("-> Gestión de modelo.servicios seleccionada.");
-    // Lógica: agregar modelo.servicios (peluquería, consulta, cirugía, paseo)
+    System.out.println("-> Gestión de servicios seleccionada.");
+    // Lógica: agregar servicios (peluquería, consulta, cirugía, paseo)
     break;
 case x:
     System.out.println("-> Gestión de productos e inventario seleccionada.");
