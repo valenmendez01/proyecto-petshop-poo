@@ -102,46 +102,25 @@ public class Mascota {
     // Obtener todas las mascotas del archivo
     public static List<Mascota> obtenerMascotasArchivo() {
         List<Mascota> mascotas = new ArrayList<Mascota>();
-        File archivo = new File("datos/mascotas.txt");
+        File archivo = new File("src/datos/mascotas.txt");
 
         // Si el archivo no existe, devolver lista vacía
         if (!archivo.exists()) {
-            // Crear directorio si no existe
-            archivo.getParentFile().mkdirs();
             return mascotas;
         }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
             String linea;
-            int maxId = 0;
 
             while ((linea = reader.readLine()) != null) {
                 String[] datos = linea.split(",");
-                if (datos.length == 8) { // Validar que tenga todos los campos
-                    int idMascotaLeida = Integer.parseInt(datos[0]);
-                    int idClienteLeido = Integer.parseInt(datos[1]);
-
-                    Mascota m = new Mascota(
-                            idClienteLeido,
-                            datos[2], // nombre
-                            datos[3], // especie
-                            datos[4], // raza
-                            datos[5], // sexo
-                            Integer.parseInt(datos[6]), // edad
-                            Double.parseDouble(datos[7]) // peso
-                    );
-                    m.setIdMascota(idMascotaLeida);
+                if (datos.length == 8) {
+                    Mascota m = new Mascota(Integer.parseInt(datos[1]), datos[2], datos[3], datos[4], datos[5], Integer.parseInt(datos[6]), Double.parseDouble(datos[7]));
+                    int id = Integer.parseInt(datos[0]);
+                    m.setIdMascota(id);
                     mascotas.add(m);
-
-                    // Actualizar el contador para mantener IDs únicos
-                    if (idMascotaLeida > maxId) {
-                        maxId = idMascotaLeida;
-                    }
                 }
             }
-
-            // Actualizar el contador global
-            contadorId = maxId + 1;
 
         } catch (IOException | NumberFormatException e) {
             System.out.println("Error al leer mascotas: " + e.getMessage());
@@ -155,39 +134,75 @@ public class Mascota {
         System.out.print("Ingrese el id del cliente asociado a la mascota a agregar: ");
         int clienteId = scanner.nextInt();
 
-        System.out.print("Ingrese el nombre de la mascota: ");
-        String nombreMascota = scanner.nextLine();
-        System.out.print("Ingrese la especie de la mascota: ");
-        String especie = scanner.nextLine();
-        System.out.print("Ingrese la raza de la mascota: ");
-        String raza = scanner.nextLine();
-        System.out.print("Ingrese el sexo de la mascota: ");
-        String sexo = scanner.nextLine();
-        System.out.print("Ingrese la edad de la mascota: ");
-        int edad = scanner.nextInt();
-        System.out.print("Ingrese el peso de la mascota: ");
-        double peso = scanner.nextDouble();
+        if (validarExistenciaCliente(clienteId)){
+            System.out.print("Cliente encontrado");
 
-        Mascota mascota = new Mascota(clienteId, nombreMascota, especie, raza, sexo, edad, peso);
+            System.out.print("Ingrese el nombre de la mascota: ");
+            String nombre = scanner.nextLine();
+            System.out.print("Ingrese la especie de la mascota: ");
+            String especie = scanner.nextLine();
+            System.out.print("Ingrese la raza de la mascota: ");
+            String raza = scanner.nextLine();
+            System.out.print("Ingrese el sexo de la mascota: ");
+            String sexo = scanner.nextLine();
+            System.out.print("Ingrese la edad de la mascota: ");
+            int edad = scanner.nextInt();
+            System.out.print("Ingrese el peso de la mascota: ");
+            double peso = scanner.nextDouble();
 
-        File archivo = new File("datos/mascotas.txt");
-        // Crear directorio si no existe
-        archivo.getParentFile().mkdirs();
+            inicializarContadorId();
 
-        try (FileWriter writer = new FileWriter(archivo, true)) {
-            writer.write(mascota.getIdMascota() + "," +
-                    mascota.getIdCliente() + "," +
-                    mascota.getNombre() + "," +
-                    mascota.getEspecie() + "," +
-                    mascota.getRaza() + "," +
-                    mascota.getSexo() + "," +
-                    mascota.getEdad() + "," +
-                    mascota.getPeso() + "\n");
-        } catch (IOException e) {
-            System.out.println("Error al escribir el archivo mascotas: " + e.getMessage());
+            Mascota mascota = new Mascota(clienteId, nombre, especie, raza, sexo, edad, peso);
+
+            File archivo = new File("src/datos/mascotas.txt");
+
+            try (FileWriter writer = new FileWriter(archivo, true)) {
+                writer.write(mascota.idMascota + "," +
+                        mascota.idCliente + "," +
+                        mascota.nombre + "," +
+                        mascota.especie + "," +
+                        mascota.raza + "," +
+                        mascota.sexo + "," +
+                        mascota.edad + "," +
+                        mascota.peso + "\n");
+            } catch (IOException e) {
+                System.out.println("Error al escribir el archivo mascotas: " + e.getMessage());
+            }
+
+            System.out.println("Mascota creada con ID: " + mascota.getIdMascota());
+
+        } else {
+            System.out.println("Cliente no encontrado o no existente");
         }
-        System.out.println("Mascota creada con ID: " + mascota.getIdMascota());
     }
+
+    public static boolean validarExistenciaCliente(int clienteId) {
+        File inputFile = new File("src/datos/clientes.txt");
+        if (!inputFile.exists()) {
+            return false;
+        }
+
+        boolean encontrado = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
+            String linea;
+            while ((linea = reader.readLine()) != null) {
+                String[] datos = linea.split(",");
+                if (datos.length == 5) {
+                    if (clienteId == Integer.parseInt(datos[0])) {
+                        encontrado = true;
+                        break;
+                    }
+                }
+            }
+
+        } catch (IOException | NumberFormatException e) {
+            System.out.println("Error: " + e.getMessage());
+            return false;
+        }
+
+        return encontrado;
+    };
 
     // Obtener mascotas por cliente específico
     public static List<Mascota> obtenerMascotasPorCliente(Scanner scanner) {
@@ -195,37 +210,37 @@ public class Mascota {
         int idCliente = scanner.nextInt();
 
         List<Mascota> mascotas = new ArrayList<Mascota>();
-        File archivo = new File("datos/mascotas.txt");
 
-        if (!archivo.exists()) {
-            return mascotas;
-        }
+        if (validarExistenciaCliente(idCliente)) {
+            System.out.print("Cliente encontrado");
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
-            String linea;
-            while ((linea = reader.readLine()) != null) {
-                String[] datos = linea.split(",");
-                if (datos.length == 8) {
-                    int idMascotaLeida = Integer.parseInt(datos[0]);
-                    int idClienteLeido = Integer.parseInt(datos[1]);
+            File archivo = new File("src/datos/mascotas.txt");
 
-                    if (idClienteLeido == idCliente) {
-                        Mascota m = new Mascota(
-                                idClienteLeido,
-                                datos[2], // nombre
-                                datos[3], // especie
-                                datos[4], // raza
-                                datos[5], // sexo
-                                Integer.parseInt(datos[6]), // edad
-                                Double.parseDouble(datos[7]) // peso
-                        );
-                        m.setIdMascota(idMascotaLeida);
-                        mascotas.add(m);
+            if (!archivo.exists()) {
+                return mascotas;
+            }
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
+                String linea;
+                while ((linea = reader.readLine()) != null) {
+                    String[] datos = linea.split(",");
+                    if (datos.length == 8) {
+                        int idClienteLeido = Integer.parseInt(datos[1]);
+
+                        if (idClienteLeido == idCliente) {
+                            Mascota m = new Mascota(Integer.parseInt(datos[1]), datos[2], datos[3], datos[4], datos[5], Integer.parseInt(datos[6]), Double.parseDouble(datos[7]));
+                            int id = Integer.parseInt(datos[0]);
+                            m.setIdMascota(id);
+                            mascotas.add(m);
+                        }
                     }
                 }
+            } catch (IOException | NumberFormatException e) {
+                System.out.println("Error al leer mascotas: " + e.getMessage());
             }
-        } catch (IOException | NumberFormatException e) {
-            System.out.println("Error al leer mascotas: " + e.getMessage());
+
+        } else {
+            System.out.println("Cliente no encontrado o no existente");
         }
 
         return mascotas;
@@ -242,26 +257,23 @@ public class Mascota {
         return null;
     }
 
-    // Eliminar mascota por ID
+    // Eliminar mascota por ID. Se usa desde el main, por lo que hay que buscar el cliente que corresponda
     public static boolean eliminarMascotaArchivo(Scanner scanner) {
 
         List<Mascota> mascotas = obtenerMascotasPorCliente(scanner);
 
         // ver idMascotas del cliente deseado
-        System.out.print("Id de las mascotas del cliente: ");
+        System.out.print("Nombre e id de las mascotas del cliente: ");
         for (Mascota mascota : mascotas) {
-            System.out.println(mascota.getIdMascota());
+            System.out.println("Nombre: " + mascota.getNombre() + " - Id" + mascota.getIdMascota());
         }
 
         // indicar el idMascota a eliminar
         System.out.print("Ingrese el id de la mascota a eliminar:");
         int idEliminar = scanner.nextInt();
 
-        // habría que validar el idEliminar ingresado
-
-
-        File inputFile = new File("datos/mascotas.txt");
-        File tempFile = new File("datos/mascotas_temp.txt");
+        File inputFile = new File("src/datos/mascotas.txt");
+        File tempFile = new File("src/datos/mascotas_temp.txt");
 
         if (!inputFile.exists()) {
             return false;
@@ -301,7 +313,7 @@ public class Mascota {
     }
 
     // Eliminar todas las mascotas de un cliente específico. Se usa en la clase Cliente
-    public static boolean eliminarMascotasPorCliente(int idCliente) {
+    public static boolean eliminarMascotasPorIdCliente(int idCliente) {
         File inputFile = new File("datos/mascotas.txt");
         File tempFile = new File("datos/mascotas_temp.txt");
 
@@ -344,12 +356,35 @@ public class Mascota {
 
     // Actualizar mascota por ID
     public static boolean actualizarMascotaArchivo(Scanner scanner) {
-        System.out.print("Ingrese el id de la mascota a actualizar:");
-        int mascotaId = scanner.nextInt();
-        Mascota mascotaActualizada = buscarMascotaPorId(mascotaId);
+        List<Mascota> mascotas = obtenerMascotasPorCliente(scanner);
 
-        File inputFile = new File("datos/mascotas.txt");
-        File tempFile = new File("datos/mascotas_temp.txt");
+        // ver idMascotas del cliente deseado
+        System.out.print("Nombre e id de las mascotas del cliente: ");
+        for (Mascota mascota : mascotas) {
+            System.out.println("Nombre: " + mascota.getNombre() + " - Id" + mascota.getIdMascota());
+        }
+
+        // indicar el idMascota a actualizar
+        System.out.print("Ingrese el id de la mascota a actualizar: ");
+        int mascotaId = scanner.nextInt();
+
+        int clienteId = mascotas.get(0).getIdCliente();
+        System.out.print("Nuevo nombre: ");
+        String nombre = scanner.nextLine();
+        System.out.print("Nueva especie: ");
+        String especie = scanner.nextLine();
+        System.out.print("Nueva raza: ");
+        String raza = scanner.nextLine();
+        System.out.print("Nuevo sexo: ");
+        String sexo = scanner.nextLine();
+        System.out.print("Nueva edad: ");
+        int edad = scanner.nextInt();
+        System.out.print("Nuevo peso: ");
+        double peso = scanner.nextDouble();
+        Mascota mascotaActualizar = new Mascota(clienteId, nombre, especie, raza, sexo, edad, peso);
+
+        File inputFile = new File("src/datos/mascotas.txt");
+        File tempFile = new File("src/datos/mascotas_temp.txt");
 
         if (!inputFile.exists()) {
             return false;
@@ -363,18 +398,16 @@ public class Mascota {
             String linea;
             while ((linea = reader.readLine()) != null) {
                 String[] datos = linea.split(",");
-                if (datos.length == 8) {
-                    int id = Integer.parseInt(datos[0]);
-
-                    if (id == mascotaActualizada.getIdMascota()) {
-                        writer.write(mascotaActualizada.getIdMascota() + "," +
-                                mascotaActualizada.getIdCliente() + "," +
-                                mascotaActualizada.getNombre() + "," +
-                                mascotaActualizada.getEspecie() + "," +
-                                mascotaActualizada.getRaza() + "," +
-                                mascotaActualizada.getSexo() + "," +
-                                mascotaActualizada.getEdad() + "," +
-                                mascotaActualizada.getPeso() + "\n");
+                if (datos.length == 5) {
+                    if (mascotaId == Integer.parseInt(datos[0])) {
+                        writer.write(mascotaId + "," +
+                            mascotaActualizar.getIdCliente() + "," +
+                            mascotaActualizar.getNombre() + "," +
+                            mascotaActualizar.getEspecie() + "," +
+                            mascotaActualizar.getRaza() + "," +
+                            mascotaActualizar.getSexo() + "," +
+                            mascotaActualizar.getEdad() + "," +
+                            mascotaActualizar.getPeso() + "\n");
                         actualizado = true;
                     } else {
                         writer.write(linea + "\n");
@@ -395,6 +428,31 @@ public class Mascota {
         }
 
         return actualizado;
+    }
+
+    public static void inicializarContadorId() {
+        File archivo = new File("src/datos/mascotas.txt");
+
+        int maxId = 0;
+
+        if (archivo.exists()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
+                String linea;
+                while ((linea = reader.readLine()) != null) {
+                    String[] partes = linea.split(",");
+                    if (partes.length >= 1) {
+                        int id = Integer.parseInt(partes[0]);
+                        if (id > maxId) {
+                            maxId = id;
+                        }
+                    }
+                }
+            } catch (IOException | NumberFormatException e) {
+                System.out.println("Error al leer IDs del archivo: " + e.getMessage());
+            }
+        }
+
+        contadorId = maxId + 1;
     }
 
     @Override

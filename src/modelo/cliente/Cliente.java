@@ -71,8 +71,6 @@ public class Cliente {
 
         // Si el archivo no existe, devolver lista vacía
         if (!archivo.exists()) {
-            // Crear directorio si no existe
-            archivo.getParentFile().mkdirs();
             return clientes;
         }
 
@@ -101,7 +99,7 @@ public class Cliente {
         inicializarContadorId();
 
         System.out.print("Ingrese el nombre del cliente: ");
-        String nombreCliente = scanner.nextLine();
+        String nombre = scanner.nextLine();
         System.out.print("Ingrese el apellido del cliente: ");
         String apellido = scanner.nextLine();
         System.out.print("Ingrese el teléfono del cliente: ");
@@ -109,11 +107,9 @@ public class Cliente {
         System.out.print("Ingrese la dirección del cliente: ");
         String direccion = scanner.nextLine();
 
-        Cliente cliente = new Cliente(nombreCliente, apellido, telefono, direccion);
+        Cliente cliente = new Cliente(nombre, apellido, telefono, direccion);
 
         File archivo = new File("src/datos/clientes.txt");
-        // Crear directorio si no existe
-        archivo.getParentFile().mkdirs();
 
         try (FileWriter writer = new FileWriter(archivo, true)) {
             writer.write(cliente.idCliente + "," +
@@ -139,7 +135,7 @@ public class Cliente {
 
         if (confirmacion.equalsIgnoreCase("s")) {
             // Eliminar también las mascotas y historiales asociados
-            Mascota.eliminarMascotasPorCliente(idEliminar);
+            Mascota.eliminarMascotasPorIdCliente(idEliminar);
             // Los historiales se eliminan automáticamente al eliminar las mascotas
 
             File inputFile = new File("src/datos/clientes.txt");
@@ -222,10 +218,10 @@ public class Cliente {
                 if (datos.length == 5) {
                     if (id == Integer.parseInt(datos[0])) {
                         writer.write(id + "," +
-                                cliente.getNombre() + "," +
-                                cliente.getApellido() + "," +
-                                cliente.getTelefono() + "," +
-                                cliente.getDireccion() + "\n");
+                            cliente.getNombre() + "," +
+                            cliente.getApellido() + "," +
+                            cliente.getTelefono() + "," +
+                            cliente.getDireccion() + "\n");
                         actualizado = true;
                     } else {
                         writer.write(linea + "\n");
@@ -273,13 +269,12 @@ public class Cliente {
         contadorId = maxId + 1;
     }
 
-
     @Override
     public String toString() {
         return "-- ID: " + idCliente +
-                ", nombre: " + nombre +
-                ", apellido: " + apellido +
-                ", telefono: " + telefono +
-                ", direccion: " + direccion;
+                "- Nombre: " + nombre +
+                "- Apellido: " + apellido +
+                "- Telefono: " + telefono +
+                "- Direccion: " + direccion;
     }
 }

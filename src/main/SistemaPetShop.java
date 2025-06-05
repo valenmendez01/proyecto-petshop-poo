@@ -156,15 +156,29 @@ public class SistemaPetShop {
                     } while (agregarOtra != 0);
                     break;
                 case 6:
-                    Mascota.actualizarMascotaArchivo(scanner);
+                    if (Mascota.actualizarMascotaArchivo(scanner)){
+                        System.out.println("Mascota actualizada con éxito");
+                    } else {
+                        System.out.println("Mascota no encontrada");
+                    }
                     break;
                 case 7:
-                    Mascota.eliminarMascotaArchivo(scanner);
+                    if (Mascota.eliminarMascotaArchivo(scanner)){
+                        System.out.println("Mascota eliminada con éxito");
+                    } else {
+                        System.out.println("Mascota no encontrada");
+                    }
                     break;
                 case 8:
                     List<Mascota> mascotas = Mascota.obtenerMascotasPorCliente(scanner);
-                    for (Mascota m : mascotas) {
-                        System.out.println(m.toString());
+
+                    if (mascotas.isEmpty()) {
+                        System.out.println("No hay mascotas registradas.");
+                        return;
+                    } else {
+                        for (Mascota m : mascotas) {
+                            System.out.println(m.toString());
+                        }
                     }
                     break;
                 case 9:
