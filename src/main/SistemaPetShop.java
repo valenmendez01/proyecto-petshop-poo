@@ -1,6 +1,7 @@
 package main;
 
 import modelo.cliente.Cliente;
+import modelo.cliente.HistorialMedico;
 import modelo.cliente.Mascota;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public class SistemaPetShop {
                         System.out.println("----------------------");
                         System.out.println("5. Registrar una nueva mascota para un cliente");
                         System.out.println("6. Modificar datos de una mascota");
-                        System.out.println("7. Eliminar mascota");
+                        System.out.println("7. Eliminar mascota de un cliente");
                         System.out.println("8. Listar mascotas de un cliente específico");
                         System.out.println("----------------------");
                         System.out.println("9.  Crear historial médico asociado a una mascota");
@@ -47,19 +48,15 @@ public class SistemaPetShop {
                         scanner.nextLine();
 
                         switch (opcion) {
-
                             case 1:
                                 Cliente.agregarClienteArchivo(scanner);
                                 break;
-
                             case 2:
                                 Cliente.actualizarClienteArchivo(scanner);
                                 break;
-
                             case 3:
                                 Cliente.eliminarClienteArchivo(scanner);
                                 break;
-
                             case 4:
                                 List<Cliente> clientes = Cliente.obtenerClientesArchivo();
 
@@ -68,47 +65,38 @@ public class SistemaPetShop {
                                     return;
                                 }
                                 break;
-
                             case 5:
                                 int agregarOtra;
                                 do {
-                                    System.out.print("Ingrese el id del cliente asociado a la mascota a agregar: ");
-                                    int clienteId = scanner.nextInt();
-
-                                    System.out.print("Ingrese el nombre de la mascota: ");
-                                    String nombreMascota = scanner.nextLine();
-                                    System.out.print("Ingrese la especie de la mascota: ");
-                                    String especie = scanner.nextLine();
-                                    System.out.print("Ingrese la raza de la mascota: ");
-                                    String raza = scanner.nextLine();
-                                    System.out.print("Ingrese el sexo de la mascota: ");
-                                    String sexo = scanner.nextLine();
-                                    System.out.print("Ingrese la edad de la mascota: ");
-                                    int edad = scanner.nextInt();
-                                    System.out.print("Ingrese el peso de la mascota: ");
-                                    double peso = scanner.nextDouble();
-
-                                    //Mascota mascota = new Mascota(nombreMascota, especie, raza, sexo, edad, peso);
-                                    //System.out.println("Mascota creada con ID: " + mascota.getIdMascota());
-                                    //cliente.agregarMascota(mascota);
+                                    Mascota.agregarMascotaArchivo(scanner);
 
                                     System.out.print("Desea agregar otra mascota? 0 para salir: ");
                                     agregarOtra = scanner.nextInt();
                                 } while (agregarOtra != 0);
                                 break;
                             case 6:
+                                Mascota.actualizarMascotaArchivo(scanner);
                                 break;
                             case 7:
+                                Mascota.eliminarMascotaArchivo(scanner);
                                 break;
                             case 8:
+                                List<Mascota> mascotas = Mascota.obtenerMascotasPorCliente(scanner);
+                                for (Mascota m : mascotas) {
+                                    System.out.println(m.toString());
+                                }
                                 break;
                             case 9:
+                                //HistorialMedico.agregarHistorialArchivo(scanner);
                                 break;
                             case 10:
+                                //HistorialMedico.actualizarHistorialArchivo(scanner);
                                 break;
                             case 11:
+                                //HistorialMedico.eliminarHistorialArchivo(scanner);
                                 break;
                             case 12:
+                                //HistorialMedico.obtenerHistorialesPorMascota(scanner);
                                 break;
                             default:
                                 System.out.println("Opción inválida. Intente nuevamente.");

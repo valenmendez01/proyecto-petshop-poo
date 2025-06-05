@@ -3,6 +3,7 @@ package modelo.cliente;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Mascota {
     private static int contadorId = 1;
@@ -150,7 +151,25 @@ public class Mascota {
     }
 
     // Agregar una mascota nueva
-    public static void agregarMascotaArchivo(Mascota mascota) {
+    public static void agregarMascotaArchivo(Scanner scanner) {
+        System.out.print("Ingrese el id del cliente asociado a la mascota a agregar: ");
+        int clienteId = scanner.nextInt();
+
+        System.out.print("Ingrese el nombre de la mascota: ");
+        String nombreMascota = scanner.nextLine();
+        System.out.print("Ingrese la especie de la mascota: ");
+        String especie = scanner.nextLine();
+        System.out.print("Ingrese la raza de la mascota: ");
+        String raza = scanner.nextLine();
+        System.out.print("Ingrese el sexo de la mascota: ");
+        String sexo = scanner.nextLine();
+        System.out.print("Ingrese la edad de la mascota: ");
+        int edad = scanner.nextInt();
+        System.out.print("Ingrese el peso de la mascota: ");
+        double peso = scanner.nextDouble();
+
+        Mascota mascota = new Mascota(clienteId, nombreMascota, especie, raza, sexo, edad, peso);
+
         File archivo = new File("datos/mascotas.txt");
         // Crear directorio si no existe
         archivo.getParentFile().mkdirs();
@@ -167,10 +186,14 @@ public class Mascota {
         } catch (IOException e) {
             System.out.println("Error al escribir el archivo mascotas: " + e.getMessage());
         }
+        System.out.println("Mascota creada con ID: " + mascota.getIdMascota());
     }
 
     // Obtener mascotas por cliente específico
-    public static List<Mascota> obtenerMascotasPorCliente(int idCliente) {
+    public static List<Mascota> obtenerMascotasPorCliente(Scanner scanner) {
+        System.out.print("Ingrese el id del cliente: ");
+        int idCliente = scanner.nextInt();
+
         List<Mascota> mascotas = new ArrayList<Mascota>();
         File archivo = new File("datos/mascotas.txt");
 
@@ -220,7 +243,23 @@ public class Mascota {
     }
 
     // Eliminar mascota por ID
-    public static boolean eliminarMascotaArchivo(int idEliminar) {
+    public static boolean eliminarMascotaArchivo(Scanner scanner) {
+
+        List<Mascota> mascotas = obtenerMascotasPorCliente(scanner);
+
+        // ver idMascotas del cliente deseado
+        System.out.print("Id de las mascotas del cliente: ");
+        for (Mascota mascota : mascotas) {
+            System.out.println(mascota.getIdMascota());
+        }
+
+        // indicar el idMascota a eliminar
+        System.out.print("Ingrese el id de la mascota a eliminar:");
+        int idEliminar = scanner.nextInt();
+
+        // habría que validar el idEliminar ingresado
+
+
         File inputFile = new File("datos/mascotas.txt");
         File tempFile = new File("datos/mascotas_temp.txt");
 
@@ -261,7 +300,7 @@ public class Mascota {
         return eliminado;
     }
 
-    // Eliminar todas las mascotas de un cliente específico
+    // Eliminar todas las mascotas de un cliente específico. Se usa en la clase Cliente
     public static boolean eliminarMascotasPorCliente(int idCliente) {
         File inputFile = new File("datos/mascotas.txt");
         File tempFile = new File("datos/mascotas_temp.txt");
@@ -304,7 +343,11 @@ public class Mascota {
     }
 
     // Actualizar mascota por ID
-    public static boolean actualizarMascotaArchivo(Mascota mascotaActualizada) {
+    public static boolean actualizarMascotaArchivo(Scanner scanner) {
+        System.out.print("Ingrese el id de la mascota a actualizar:");
+        int mascotaId = scanner.nextInt();
+        Mascota mascotaActualizada = buscarMascotaPorId(mascotaId);
+
         File inputFile = new File("datos/mascotas.txt");
         File tempFile = new File("datos/mascotas_temp.txt");
 

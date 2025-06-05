@@ -1,6 +1,5 @@
-package agenda;
+package modelo.agenda;
 
-import cliente.Mascota;
 import servicios.Servicio;
 
 import java.util.List;
@@ -9,15 +8,15 @@ public class Turno {
     private static int contadorId = 1;
 
     private int idTurno;
-    private Mascota mascota;
+    private int idMascota;
     private Servicio servicio;
     private String fecha;
     private String horaInicio;
     private String horaFin;
 
-    public Turno(Mascota mascota, Servicio servicio, String fecha, String horaInicio, String horaFin) {
+    public Turno(int idMascota, Servicio servicio, String fecha, String horaInicio, String horaFin) {
         this.idTurno = contadorId++;
-        this.mascota = mascota;
+        this.idMascota = idMascota;
         this.servicio = servicio;
         this.fecha = fecha;
         this.horaInicio = horaInicio;
@@ -32,12 +31,12 @@ public class Turno {
         this.idTurno = idTurno;
     }
 
-    public Mascota getMascota() {
-        return mascota;
+    public int getIdMascota() {
+        return idMascota;
     }
 
-    public void setMascota(Mascota mascota) {
-        this.mascota = mascota;
+    public void setIdMascota(int idMascota) {
+        this.idMascota = idMascota;
     }
 
     public Servicio getServicio() {
@@ -76,7 +75,7 @@ public class Turno {
         return null; // completar
     }
 
-    public void agregarTurnoArchivo(Turno turno, Mascota mascota, Servicio servicio, String fecha, String horaInicio, String horaFin){
+    public void agregarTurnoArchivo(Turno turno, int idMascota, Servicio servicio, String fecha, String horaInicio, String horaFin){
         // completar
     }
 

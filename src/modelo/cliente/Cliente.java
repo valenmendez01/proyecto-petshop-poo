@@ -64,11 +64,6 @@ public class Cliente {
         this.direccion = direccion;
     }
 
-    // Metodo para obtener todas las mascotas de este cliente
-    public List<Mascota> obtenerMascotas() {
-        return Mascota.obtenerMascotasPorCliente(this.idCliente);
-    }
-
     // Metodo para obtener todos los clientes del archivo
     public static List<Cliente> obtenerClientesArchivo() {
         List<Cliente> clientes = new ArrayList<Cliente>();
