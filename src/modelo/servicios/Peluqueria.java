@@ -37,4 +37,10 @@ public class Peluqueria extends Servicio {
 
         return precioBloque * cantidadBloques;
     };
+
+    @Override
+    public String toCSV() {
+        return "Peluqueria," + precioBloque + "," + nombre + "," + cantidadBloques + "," + incluyeCorteUnas;
+    }
+
 }

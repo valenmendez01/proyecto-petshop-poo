@@ -128,21 +128,22 @@ public class Mascota {
     public static void agregarMascotaArchivo(Scanner scanner) {
         System.out.print("Ingrese el id del cliente asociado a la mascota a agregar: ");
         int clienteId = scanner.nextInt();
+        scanner.nextLine();
 
         if (validarExistenciaCliente(clienteId)){
-            System.out.print("Cliente encontrado");
+            System.out.println("Cliente encontrado");
 
-            System.out.print("Ingrese el nombre de la mascota: ");
+            System.out.println("Ingrese el nombre de la mascota: ");
             String nombre = scanner.nextLine();
-            System.out.print("Ingrese la especie de la mascota: ");
+            System.out.println("Ingrese la especie de la mascota: ");
             String especie = scanner.nextLine();
-            System.out.print("Ingrese la raza de la mascota: ");
+            System.out.println("Ingrese la raza de la mascota: ");
             String raza = scanner.nextLine();
-            System.out.print("Ingrese el sexo de la mascota: ");
+            System.out.println("Ingrese el sexo de la mascota: ");
             String sexo = scanner.nextLine();
-            System.out.print("Ingrese la edad de la mascota: ");
+            System.out.println("Ingrese la edad de la mascota: ");
             int edad = scanner.nextInt();
-            System.out.print("Ingrese el peso de la mascota: ");
+            System.out.println("Ingrese el peso de la mascota: ");
             double peso = scanner.nextDouble();
 
             inicializarContadorId();
@@ -201,13 +202,13 @@ public class Mascota {
 
     // Obtener mascotas por cliente específico
     public static List<Mascota> obtenerMascotasPorCliente(Scanner scanner) {
-        System.out.print("Ingrese el id del cliente: ");
+        System.out.println("Ingrese el id del cliente: ");
         int idCliente = scanner.nextInt();
 
         List<Mascota> mascotas = new ArrayList<Mascota>();
 
         if (validarExistenciaCliente(idCliente)) {
-            System.out.print("Cliente encontrado");
+            System.out.println("Cliente encontrado");
 
             File archivo = new File("src/datos/mascotas.txt");
 
@@ -247,13 +248,13 @@ public class Mascota {
         List<Mascota> mascotas = obtenerMascotasPorCliente(scanner);
 
         // ver idMascotas del cliente deseado
-        System.out.print("Nombre e id de las mascotas del cliente: ");
+        System.out.println("Nombre e id de las mascotas del cliente: ");
         for (Mascota mascota : mascotas) {
             System.out.println("Nombre: " + mascota.getNombre() + " - Id" + mascota.getIdMascota());
         }
 
         // indicar el idMascota a eliminar
-        System.out.print("Ingrese el id de la mascota a eliminar:");
+        System.out.println("Ingrese el id de la mascota a eliminar:");
         int idEliminar = scanner.nextInt();
 
         File inputFile = new File("src/datos/mascotas.txt");
@@ -343,27 +344,27 @@ public class Mascota {
         List<Mascota> mascotas = obtenerMascotasPorCliente(scanner);
 
         // ver idMascotas del cliente deseado
-        System.out.print("Nombre e id de las mascotas del cliente: ");
+        System.out.println("Nombre e id de las mascotas del cliente: ");
         for (Mascota mascota : mascotas) {
             System.out.println("Nombre: " + mascota.getNombre() + " - Id" + mascota.getIdMascota());
         }
 
         // indicar el idMascota a actualizar
-        System.out.print("Ingrese el id de la mascota a actualizar: ");
+        System.out.println("Ingrese el id de la mascota a actualizar: ");
         int mascotaId = scanner.nextInt();
 
         int clienteId = mascotas.get(0).getIdCliente();
-        System.out.print("Nuevo nombre: ");
+        System.out.println("Nuevo nombre: ");
         String nombre = scanner.nextLine();
-        System.out.print("Nueva especie: ");
+        System.out.println("Nueva especie: ");
         String especie = scanner.nextLine();
-        System.out.print("Nueva raza: ");
+        System.out.println("Nueva raza: ");
         String raza = scanner.nextLine();
-        System.out.print("Nuevo sexo: ");
+        System.out.println("Nuevo sexo: ");
         String sexo = scanner.nextLine();
-        System.out.print("Nueva edad: ");
+        System.out.println("Nueva edad: ");
         int edad = scanner.nextInt();
-        System.out.print("Nuevo peso: ");
+        System.out.println("Nuevo peso: ");
         double peso = scanner.nextDouble();
         Mascota mascotaActualizar = new Mascota(clienteId, nombre, especie, raza, sexo, edad, peso);
 

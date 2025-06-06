@@ -38,4 +38,7 @@ public abstract class Servicio {
     }
 
     public abstract double calcularCosto(Turno turno);
+
+    public abstract String toCSV();
+
 }

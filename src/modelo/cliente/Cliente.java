@@ -113,10 +113,10 @@ public class Cliente {
 
         try (FileWriter writer = new FileWriter(archivo, true)) {
             writer.write(cliente.idCliente + "," +
-                    cliente.nombre + "," +
-                    cliente.apellido + "," +
-                    cliente.telefono + "," +
-                    cliente.direccion + "\n");
+                cliente.nombre + "," +
+                cliente.apellido + "," +
+                cliente.telefono + "," +
+                cliente.direccion + "\n");
         } catch (IOException e) {
             System.out.println("Error al escribir el archivo: " + e.getMessage());
         }

@@ -37,4 +37,9 @@ public class Paseo extends Servicio {
 
         return precioBloque * cantidadBloques;
     };
+
+    @Override
+    public String toCSV() {
+        return "Paseo," + precioBloque + "," + nombre + "," + cantidadBloques + "," + individual;
+    }
 }

@@ -2,7 +2,7 @@ package modelo.servicios;
 
 import modelo.agenda.Turno;
 
-public abstract class Veterinaria extends Servicio {
+public class Veterinaria extends Servicio {
     private boolean esUrgencia;
 
     public Veterinaria(double precioBloque, String nombre, int cantidadBloques, boolean esUrgencia) {
@@ -38,4 +38,10 @@ public abstract class Veterinaria extends Servicio {
 
         return precioBloque * cantidadBloques;
     };
+
+    @Override
+    public String toCSV() {
+        return "Veterinaria," + precioBloque + "," + nombre + "," + cantidadBloques + "," + esUrgencia;
+    }
+
 }

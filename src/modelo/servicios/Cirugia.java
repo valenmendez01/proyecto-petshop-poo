@@ -37,4 +37,10 @@ public class Cirugia extends Servicio {
 
         return precioBloque * cantidadBloques;
     };
+
+    @Override
+    public String toCSV() {
+        return "Cirugia," + precioBloque + "," + nombre + "," + cantidadBloques + "," + requiereAnestesia;
+    }
+
 }

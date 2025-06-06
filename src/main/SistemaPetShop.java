@@ -3,6 +3,7 @@ package main;
 import modelo.cliente.Cliente;
 import modelo.cliente.HistorialMedico;
 import modelo.cliente.Mascota;
+import modelo.agenda.Turno;
 
 import javax.swing.*;
 import java.awt.*;
@@ -215,20 +216,39 @@ public class SistemaPetShop {
 
             switch (opcion) {
                 case 1:
-                    // seleccionar cliente - mascota
-                    // elegir servicio
-                    // mostrar disponibilidad fecha-hora
-                    // elegir fecha y hora
-                    // validar
+                    int agregarOtra;
+                    do {
+                        Turno.agregarTurnoArchivo(scanner);
+
+                        System.out.print("Desea agregar otro turno? 0 para salir: ");
+                        agregarOtra = scanner.nextInt();
+                    } while (agregarOtra != 0);
                     break;
                 case 2:
+                    if (Turno.actualizarTurnoArchivo(scanner)){
+                        System.out.println("Turno actualizado con éxito");
+                    } else {
+                        System.out.println("Turno no encontrado");
+                    }
                     break;
                 case 3:
+                    if (Turno.eliminarTurnoArchivo(scanner)){
+                        System.out.println("Turno eliminado con éxito");
+                    } else {
+                        System.out.println("Turno no encontrado");
+                    }
                     break;
                 case 4:
-                    // ver todas las citas del día
-                    // filtrar por cliente o mascota
-                    // mostrar citas próximas
+                    List<Turno> turnos = Turno.obtenerTurnosArchivo();
+
+                    if (turnos.isEmpty()) {
+                        System.out.println("No hay turnos registrados.");
+                        return;
+                    } else {
+                        for (Turno t : turnos) {
+                            System.out.println(t.toString());
+                        }
+                    }
                     break;
                 default:
                     System.out.println("Opción inválida. Intente nuevamente.");
