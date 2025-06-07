@@ -10,7 +10,7 @@ public class AlimentoMascota extends Producto {
     private String infoNutricional;
     private Date fechaVencimiento;
 
-    public AlimentoMascota(String idProducto, String nombre, double precio, int stock, String descripcion, String especieObjetivo, String etapaVida, Date fechaVencimiento, String infoNutricional, List<String> ingredientes) {
+    public AlimentoMascota(String idProducto, String nombre, double precio, int stock, String descripcion, String especieObjetivo, String etapaVida, Date fechaVencimiento, String infoNutricional) {
         super(idProducto, nombre, precio, stock, descripcion);
         this.especieObjetivo = especieObjetivo;
         this.etapaVida = etapaVida;

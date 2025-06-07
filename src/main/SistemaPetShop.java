@@ -18,7 +18,7 @@ import java.util.List;
 public class SistemaPetShop {
     public static void main(String[] args) {
         JFrame marco = new JFrame("Menu");
-        ArrayList<Producto> productos = dataBaseProductos.cargarProductos();
+        ArrayList<Producto> productos = dataBaseProductos.obtenerProductos();
         // Panel superior con el título
         JLabel titulo = new JLabel("SISTEMA DE GESTIÓN DEL PET SHOP", JLabel.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 18));
