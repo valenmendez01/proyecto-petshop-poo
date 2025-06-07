@@ -1,22 +1,24 @@
 package main;
 
+import dataBase.dataBaseProductos;
 import modelo.cliente.Cliente;
-import modelo.cliente.HistorialMedico;
 import modelo.cliente.Mascota;
 import modelo.agenda.Turno;
+import modelo.producto.CatalogoProductos;
+import modelo.producto.Producto;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.*;
 import java.util.List;
-import java.util.Scanner;
 
 public class SistemaPetShop {
     public static void main(String[] args) {
-
         JFrame marco = new JFrame("Menu");
-
+        ArrayList<Producto> productos = dataBaseProductos.cargarProductos();
         // Panel superior con el título
         JLabel titulo = new JLabel("SISTEMA DE GESTIÓN DEL PET SHOP", JLabel.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 18));
@@ -34,11 +36,14 @@ public class SistemaPetShop {
 
         JButton boton4 = new JButton("4. Gestionar proveedores y pedidos");
 
+        JButton boton5 = new JButton("5. Ver Productos");
+
         // Asignar comandos
         boton1.setActionCommand("1");
         boton2.setActionCommand("2");
         boton3.setActionCommand("3");
         boton4.setActionCommand("4");
+        boton5.setActionCommand("5");
 
         // Crear listener único para todos
         ActionListener listener = new ActionListener() {
@@ -59,6 +64,9 @@ public class SistemaPetShop {
                     case "4":
                         gestionarPedidos();
                         break;
+                    case "5":
+                        verProductos(marco, productos);
+                        break;
                     default:
                         System.out.println("Opción no válida");
                 }
@@ -70,11 +78,13 @@ public class SistemaPetShop {
         boton2.addActionListener(listener);
         boton3.addActionListener(listener);
         boton4.addActionListener(listener);
+        boton5.addActionListener(listener);
 
         panelCentral.add(boton1);
         panelCentral.add(boton2);
         panelCentral.add(boton3);
         panelCentral.add(boton4);
+        panelCentral.add(boton5);
 
         marco.add(panelCentral, BorderLayout.CENTER);
 
@@ -266,5 +276,27 @@ public class SistemaPetShop {
         // Lógica: hacer pedidos, consultar estado, agregar proveedores
     }
 
+    public static void verProductos(JFrame parentFrame, ArrayList<Producto> productos){
+        String[] columnas = {"Id", "Nombre", "Precio","Stock"};
+        Object[][] datos = new Object[productos.size()][4];
+
+        for (int i = 0; i < productos.size(); i++) {
+            Producto p = productos.get(i);
+            datos[i][0] = p.getIdProducto();
+            datos[i][1] = p.getNombre();
+            datos[i][2] = p.getPrecio();
+            datos[i][3] = p.getStock();
+        }
+
+        JTable tabla = new JTable(new DefaultTableModel(datos, columnas));
+        JScrollPane scrollPane = new JScrollPane(tabla);
+
+        JDialog dialogo = new JDialog(parentFrame, "Personas", true);
+        dialogo.setSize(400, 300);
+        dialogo.setLayout(new BorderLayout());
+        dialogo.add(scrollPane, BorderLayout.CENTER);
+        dialogo.setLocationRelativeTo(parentFrame);
+        dialogo.setVisible(true);
+    }
 }
 

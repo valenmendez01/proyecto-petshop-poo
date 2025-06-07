@@ -1,18 +1,17 @@
-/*
 package modelo.venta;
 
-import Producto.Producto;
+import modelo.producto.Producto;
 
 import java.util.List;
 
-public class Proveedor {
+public class Pedido {
     private String idProveedor;
     private String nombre;
     private String direccion;
     private String contacto;
-    private List<PedidoProveedor> listadoPedidos;
+    private List<ItemPedido> listadoPedidos;
 
-    public Proveedor(String idProveedor, String nombre, String direccion, String contacto, List<PedidoProveedor> listadoPedidos) {
+    public Pedido(String idProveedor, String nombre, String direccion, String contacto, List<ItemPedido> listadoPedidos) {
         this.idProveedor = idProveedor;
         this.nombre = nombre;
         this.direccion = direccion;
@@ -44,14 +43,14 @@ public class Proveedor {
         this.contacto = contacto;
     }
     public void realizarPedido(String id, Producto producto, int cantidad, double costoTotal) {
-        var PedidoProveedor = new PedidoProveedor(id, producto, cantidad, costoTotal);
+        var PedidoProveedor = new ItemPedido(id, producto, cantidad, costoTotal);
         listadoPedidos.add(PedidoProveedor);
         producto.anadirStock(cantidad);
     }
-    public List<PedidoProveedor> getListadoPedidos() {
+    public List<ItemPedido> getListadoPedidos() {
         return listadoPedidos;
     }
-    public void setListadoPedidos(List<PedidoProveedor> listadoPedidos) {
+    public void setListadoPedidos(List<ItemPedido> listadoPedidos) {
         this.listadoPedidos = listadoPedidos;
     }
     public void verPedidos() {
@@ -59,11 +58,10 @@ public class Proveedor {
             pedidoProveedor.mostrar();
         });
     }
-    public PedidoProveedor ObtenerPedido(String id) {
+    public ItemPedido ObtenerPedido(String id) {
         return this.listadoPedidos.stream()
                 .filter(pedidoProveedor -> pedidoProveedor.getId().equals(id))
                 .findFirst()
                 .orElse(null);
     }
 }
- */

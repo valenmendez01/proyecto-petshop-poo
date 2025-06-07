@@ -1,4 +1,3 @@
-/*
 package modelo.venta;
 
 import modelo.cliente.Cliente;
@@ -72,4 +71,3 @@ public class Venta {
         return total;
     }
 }
- */

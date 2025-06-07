@@ -1,15 +1,14 @@
-/*
 package modelo.venta;
 
-import Producto.Producto;
+import modelo.producto.Producto;
 
-public class PedidoProveedor {
+public class ItemPedido {
     private String id;
     private Producto producto;
     private int cantidad;
     private double costoTotal;
 
-    public PedidoProveedor(String id, Producto producto, int cantidad, double costoTotal) {
+    public ItemPedido(String id, Producto producto, int cantidad, double costoTotal) {
         this.id = id;
         this.producto = producto;
         this.cantidad = cantidad;
@@ -46,4 +45,3 @@ public class PedidoProveedor {
         this.id = id;
     }
 }
- */

@@ -1,6 +1,6 @@
-package Producto;
+package modelo.producto;
 
-public class Producto {
+public abstract class Producto {
     private String idProducto;
     private String nombre;
     private double precio;

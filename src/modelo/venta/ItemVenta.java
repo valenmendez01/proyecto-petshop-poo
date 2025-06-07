@@ -1,7 +1,6 @@
-/*
 package modelo.venta;
 
-import Producto.Producto;
+import modelo.producto.Producto;
 
 public class ItemVenta {
     private Producto producto;
@@ -43,6 +42,4 @@ public class ItemVenta {
         subtotal = cantidad * precioUnitario;
         return subtotal;
     }
-
 }
- */

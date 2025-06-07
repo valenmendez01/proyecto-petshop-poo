@@ -1,4 +1,4 @@
-package Producto;
+package modelo.producto;
 
 import java.util.Date;
 import java.util.List;
@@ -16,7 +16,6 @@ public class AlimentoMascota extends Producto {
         this.etapaVida = etapaVida;
         this.fechaVencimiento = fechaVencimiento;
         this.infoNutricional = infoNutricional;
-        this.ingredientes = ingredientes;
     }
     public String getEspecieObjetivo() {
         return especieObjetivo;
@@ -29,12 +28,6 @@ public class AlimentoMascota extends Producto {
     }
     public void setEtapaVida(String etapaVida) {
         this.etapaVida = etapaVida;
-    }
-    public List<String> getIngredientes() {
-        return ingredientes;
-    }
-    public void setIngredientes(List<String> ingredientes) {
-        this.ingredientes = ingredientes;
     }
     public String getInfoNutricional() {
         return infoNutricional;

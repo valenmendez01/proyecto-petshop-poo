@@ -1,4 +1,4 @@
-package Producto;
+package modelo.producto;
 
 public class ArticuloVarios extends Producto {
     private String categoria;
