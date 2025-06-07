@@ -233,7 +233,6 @@ public class Cliente {
                     }
                 }
             }
-
         } catch (IOException | NumberFormatException e) {
             System.out.println("Error: " + e.getMessage());
             return false;

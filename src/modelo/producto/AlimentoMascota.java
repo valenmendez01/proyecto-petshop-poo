@@ -42,4 +42,12 @@ public class AlimentoMascota extends Producto {
         this.fechaVencimiento = fechaVencimiento;
     }
 
+    @Override
+    public String getProductDescription() {
+        return "ID: " + getIdProducto() + "\n"
+                + "Nombre: " + getNombre() + "\n"
+                + "Descripción: " + getDescripcion() + "\n"
+                + "Precio: $" + getPrecio() + "\n"
+                + "Stock: " + getStock();
+    }
 }

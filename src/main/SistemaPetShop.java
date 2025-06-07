@@ -6,6 +6,7 @@ import modelo.cliente.Mascota;
 import modelo.agenda.Turno;
 import modelo.producto.CatalogoProductos;
 import modelo.producto.Producto;
+import modelo.venta.Pedido;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -62,7 +63,7 @@ public class SistemaPetShop {
                         registrarVentas();
                         break;
                     case "4":
-                        gestionarPedidos();
+                        gestionarPedidos(marco, new ArrayList<>());
                         break;
                     case "5":
                         verProductos(marco, productos);
@@ -271,7 +272,7 @@ public class SistemaPetShop {
         // Lógica: registrar venta, ver historial de ventas
     }
 
-    public static void gestionarPedidos(){
+    public static void gestionarPedidos(JFrame parentFrame, ArrayList<Pedido> pedidos){
         System.out.println("-> Gestión de pedidos seleccionada.");
         // Lógica: hacer pedidos, consultar estado, agregar proveedores
     }
@@ -291,10 +292,60 @@ public class SistemaPetShop {
         JTable tabla = new JTable(new DefaultTableModel(datos, columnas));
         JScrollPane scrollPane = new JScrollPane(tabla);
 
-        JDialog dialogo = new JDialog(parentFrame, "Personas", true);
-        dialogo.setSize(400, 300);
+        JButton verDetalleBtn = new JButton("Ver Detalle");
+
+        verDetalleBtn.addActionListener(e -> {
+            int filaSeleccionada = tabla.getSelectedRow();
+            if (filaSeleccionada == -1) {
+                JOptionPane.showMessageDialog(parentFrame, "Seleccione un producto primero.");
+                return;
+            }
+
+            // Buscar el producto correspondiente
+            Producto productoSeleccionado = productos.get(filaSeleccionada);
+
+            String detalle = productoSeleccionado.getDescripcion();
+
+            JOptionPane.showMessageDialog(parentFrame, detalle, "Detalle del Producto", JOptionPane.INFORMATION_MESSAGE);
+        });
+
+        JButton botonModificarStock = new JButton("Modificar Stock");
+        botonModificarStock.addActionListener(e -> {
+            int filaSeleccionada = tabla.getSelectedRow();
+            if (filaSeleccionada == -1) {
+                JOptionPane.showMessageDialog(parentFrame, "Seleccioná un producto primero.");
+                return;
+            }
+
+            Producto productoSeleccionado = productos.get(filaSeleccionada);
+
+            String input = JOptionPane.showInputDialog(parentFrame,
+                    "Ingresá el nuevo stock para " + productoSeleccionado.getNombre() + ":",
+                    productoSeleccionado.getStock());
+
+            if (input != null && !input.isEmpty()) {
+                try {
+                    int nuevoStock = Integer.parseInt(input);
+                    productoSeleccionado.setStock(nuevoStock);
+                    tabla.setValueAt(nuevoStock, filaSeleccionada, 3);
+
+                    productos.clear();
+                    productos.addAll(dataBaseProductos.actualizarProducto(productoSeleccionado));
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(parentFrame, "Stock inválido. Ingresá un número entero.");
+                }
+            }
+        });
+
+        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        panelBoton.add(verDetalleBtn);
+        panelBoton.add(botonModificarStock);
+
+        JDialog dialogo = new JDialog(parentFrame, "Productos", true);
+        dialogo.setSize(500, 400);
         dialogo.setLayout(new BorderLayout());
         dialogo.add(scrollPane, BorderLayout.CENTER);
+        dialogo.add(panelBoton, BorderLayout.SOUTH);
         dialogo.setLocationRelativeTo(parentFrame);
         dialogo.setVisible(true);
     }

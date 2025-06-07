@@ -30,8 +30,6 @@ public class dataBaseProductos {
                         );
                         productos.add(articulo);
                     } else if (partes.length == 10) {
-                        List<String> ingredientes = new ArrayList<>(Arrays.asList(partes[9].split("\\|")));
-
                         Date fechaVencimiento = Date.valueOf(partes[7]);
 
                         AlimentoMascota alimento = new AlimentoMascota(
@@ -55,35 +53,41 @@ public class dataBaseProductos {
         }
         return productos;
     }
-    public static void guardarArticuloVarios(ArticuloVarios articulo) {
-        StringBuilder linea = new StringBuilder();
-        linea.append(articulo.getIdProducto()).append(";")
-                .append(articulo.getNombre()).append(";")
-                .append(articulo.getPrecio()).append(";")
-                .append(articulo.getStock()).append(";")
-                .append(articulo.getDescripcion()).append(";")
-                .append(articulo.getCategoria()).append(";")
-                .append(articulo.getMarca()).append(";")
-                .append(articulo.getMaterial()).append(";");
 
-        escribirArchivo(linea.toString());
+    private static String lineaProducto(ArticuloVarios articulo) {
+        return articulo.getIdProducto() + ";" +
+                articulo.getNombre() + ";" +
+                articulo.getPrecio() + ";" +
+                articulo.getStock() + ";" +
+                articulo.getDescripcion() + ";" +
+                articulo.getCategoria() + ";" +
+                articulo.getMarca() + ";" +
+                articulo.getMaterial() + ";";
     }
-    public static void guardarAlimentoMascota(AlimentoMascota articulo) {
-        StringBuilder linea = new StringBuilder();
-        linea.append(articulo.getIdProducto()).append(";")
-                .append(articulo.getNombre()).append(";")
-                .append(articulo.getPrecio()).append(";")
-                .append(articulo.getStock()).append(";")
-                .append(articulo.getDescripcion()).append(";")
-                .append(articulo.getEspecieObjetivo()).append(";")
-                .append(articulo.getEtapaVida()).append(";")
-                .append(articulo.getFechaVencimiento()).append(";")
-                .append(articulo.getInfoNutricional()).append(";");
 
-        escribirArchivo(linea.toString());
+    private static String lineaProducto(AlimentoMascota alimento) {
+        return alimento.getIdProducto() + ";" +
+                alimento.getNombre() + ";" +
+                alimento.getPrecio() + ";" +
+                alimento.getStock() + ";" +
+                alimento.getDescripcion() + ";" +
+                alimento.getEspecieObjetivo() + ";" +
+                alimento.getEtapaVida() + ";" +
+                alimento.getFechaVencimiento() + ";" +
+                alimento.getInfoNutricional() + ";";
+    }
+
+    public static void guardarProducto(ArticuloVarios articulo) {
+        String linea = lineaProducto(articulo);
+        escribirArchivo(linea);
+    }
+
+    public static void guardarProducto(AlimentoMascota alimento) {
+        String linea = lineaProducto(alimento);
+        escribirArchivo(linea);
     }
     private static void escribirArchivo(String producto) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivo))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivo, true))) {
             writer.write(producto);
             writer.newLine();
 
@@ -91,5 +95,45 @@ public class dataBaseProductos {
         } catch (IOException e) {
             System.out.println("Error al guardar producto: " + e.getMessage());
         }
+    }
+
+    public static ArrayList<Producto> actualizarProducto(Producto producto) {
+        ArrayList<Producto> productos = obtenerProductos();
+
+        boolean encontrado = false;
+
+        for (int i = 0; i < productos.size(); i++) {
+            if (productos.get(i).getIdProducto().equals(producto.getIdProducto())) {
+                productos.set(i, producto);
+                encontrado = true;
+                break;
+            }
+        }
+
+        if (!encontrado) {
+            System.out.println("Producto con ID " + producto.getIdProducto() + " no encontrado.");
+            throw new RuntimeException("Producto no encontrado.");
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivo))) {
+            for (Producto p : productos) {
+                String linea;
+                if (p instanceof ArticuloVarios) {
+                    linea = lineaProducto((ArticuloVarios) p);
+                } else if (p instanceof AlimentoMascota) {
+                    linea = lineaProducto((AlimentoMascota) p);
+                } else {
+                    continue; // ignorar tipos desconocidos
+                }
+
+                writer.write(linea);
+                writer.newLine();
+            }
+            System.out.println("Producto actualizado correctamente.");
+        } catch (IOException e) {
+            System.out.println("Error al guardar productos: " + e.getMessage());
+        }
+
+        return productos;
     }
 }

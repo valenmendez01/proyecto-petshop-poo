@@ -50,5 +50,5 @@ public abstract class Producto {
     public void restartStock(int cantidad) {
         this.stock -= cantidad;
     }
-
+    public abstract String getProductDescription();
 }

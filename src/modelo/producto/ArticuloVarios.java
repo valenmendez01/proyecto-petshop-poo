@@ -29,4 +29,13 @@ public class ArticuloVarios extends Producto {
     public void setMaterial(String material) {
         this.material = material;
     }
+
+    @Override
+    public String getProductDescription() {
+        return "ID: " + getIdProducto() + "\n"
+                + "Nombre: " + getNombre() + "\n"
+                + "Descripción: " + getDescripcion() + "\n"
+                + "Precio: $" + getPrecio() + "\n"
+                + "Stock: " + getStock();
+    }
 }
