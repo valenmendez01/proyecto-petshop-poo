@@ -21,6 +21,8 @@ public class Venta {
         this.metodoPago = metodoPago;
         this.itemVenta = itemVenta;
     }
+
+
     public String getIdVenta() {
         return idVenta;
     }
@@ -70,4 +72,12 @@ public class Venta {
         };
         return total;
     }
+    public double calcularTotalVenta() {
+        double total = 0.0;
+        for (ItemVenta item : itemVenta) {
+            total += item.getSubtotal();
+        }
+        return total;
+    }
+
 }
