@@ -36,7 +36,7 @@ public class SistemaPetShop {
 
         JButton boton2 = new JButton("2. Gestionar citas");
 
-        JButton boton3 = new JButton("3. Registrar venta");
+        JButton boton3 = new JButton("3. Gestionar ventas");
 
         JButton boton4 = new JButton("4. Gestionar proveedores y pedidos");
 
@@ -529,95 +529,147 @@ public class SistemaPetShop {
                     String metodoPago = JOptionPane.showInputDialog(parentFrame, "Método de pago:");
 
                     ventaActual = new Venta(idVenta, cliente, fechaVenta, montoTotal, metodoPago, new ArrayList<>());
-                    JOptionPane.showMessageDialog(parentFrame, "Venta creada correctamente.");
+                    Venta.guardarVentaArchivo(ventaActual);
+                    ventas.add(ventaActual);
+                    JOptionPane.showMessageDialog(parentFrame, "Venta creada y guardada correctamente.");
                     break;
                 case "2":
-                    if (ventaActual == null) {
-                        JOptionPane.showMessageDialog(parentFrame, "No hay una venta en curso. Creá una primero.");
+                    if (ventas.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "No hay ventas registradas.");
                         break;
                     }
 
-                    ArrayList<Producto> productosDisponibles = dataBaseProductos.obtenerProductos();
+                    StringBuilder ventasDisponibles = new StringBuilder("Ventas disponibles:\n");
+                    for (Venta v : ventas) {
+                        ventasDisponibles.append("- ID: ").append(v.getIdVenta()).append(" (Cliente: ")
+                                .append(v.getCliente().getNombre()).append(")\n");
+                    }
 
-                    String nombreProducto = JOptionPane.showInputDialog(parentFrame, "Ingrese el nombre del producto:");
-
-                    Producto productoSeleccionado = null;
-                    for (Producto p : productosDisponibles) {
-                        if (p.getNombre().equalsIgnoreCase(nombreProducto)) {
-                            productoSeleccionado = p;
+                    String idBuscar = JOptionPane.showInputDialog(ventasDisponibles + "\nIngrese el ID de la venta:");
+                    Venta ventaSeleccionada = null;
+                    for (Venta v : ventas) {
+                        if (v.getIdVenta().equalsIgnoreCase(idBuscar)) {
+                            ventaSeleccionada = v;
                             break;
                         }
                     }
 
-                    if (productoSeleccionado == null) {
-                        JOptionPane.showMessageDialog(parentFrame, "Producto no encontrado.");
+                    if (ventaSeleccionada == null) {
+                        JOptionPane.showMessageDialog(null, "ID de venta no encontrado.");
                         break;
                     }
 
-                    String cantidadStr = JOptionPane.showInputDialog(parentFrame, "Ingrese la cantidad:");
-                    int cantidad = Integer.parseInt(cantidadStr);
+                    ArrayList<Producto> productos = dataBaseProductos.obtenerProductos();
+                    if (productos.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "No hay productos cargados.");
+                        break;
+                    }
 
-                    double precioUnitario = productoSeleccionado.getPrecio();
-                    double subtotal = precioUnitario * cantidad;
+                    StringBuilder lista = new StringBuilder("Productos disponibles:\n");
+                    for (Producto p : productos) {
+                        lista.append(p.getIdProducto())
+                                .append(" - ").append(p.getNombre())
+                                .append(" ($").append(p.getPrecio()).append(")\n");
+                    }
 
-                    ItemVenta item = new ItemVenta(productoSeleccionado, cantidad, precioUnitario, subtotal);
-                    ventaActual.getItemVenta().add(item); // Asumiendo que tenés este getter
+                    String idProd = JOptionPane.showInputDialog(lista + "\nIngrese el ID del producto:");
+                    Producto seleccionado = null;
+                    for (Producto p : productos) {
+                        if (p.getIdProducto().equalsIgnoreCase(idProd)) {
+                            seleccionado = p;
+                            break;
+                        }
+                    }
 
-                    JOptionPane.showMessageDialog(parentFrame, "Producto agregado correctamente.");
+                    if (seleccionado == null) {
+                        JOptionPane.showMessageDialog(null, "Producto no encontrado.");
+                        break;
+                    }
+
+                    int cantidad;
+                    try {
+                        cantidad = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la cantidad:"));
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(null, "Cantidad inválida.");
+                        break;
+                    }
+
+                    double subtotal = cantidad * seleccionado.getPrecio();
+                    ItemVenta nuevoItem = new ItemVenta(seleccionado, cantidad, seleccionado.getPrecio(), subtotal);
+                    ventaSeleccionada.getItemVenta().add(nuevoItem);
+
+                    Venta.sobrescribirVentasArchivo(ventas);  // para actualizar el archivo
+                    JOptionPane.showMessageDialog(null, "Producto agregado a la venta.");
                     break;
                 case "3":
-                    if (ventaActual == null) {
-                        JOptionPane.showMessageDialog(parentFrame, "No hay una venta en curso.");
+                    if (ventas.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "No hay ventas registradas.");
                         break;
                     }
 
-                    List<ItemVenta> itemsVenta = ventaActual.getItemVenta();
-                    if (itemsVenta.isEmpty()) {
-                        JOptionPane.showMessageDialog(parentFrame, "La venta no tiene productos cargados.");
-                        break;
+                    StringBuilder ventasStr3 = new StringBuilder("Ventas disponibles:\n");
+                    for (Venta v : ventas) {
+                        ventasStr3.append("- ID: ").append(v.getIdVenta()).append("\n");
                     }
 
-                    String productos = "";
-                    for (ItemVenta i : itemsVenta) {
-                        productos += "- " + i.getProducto().getNombre() + " (x" + i.getCantidad() + ")\n";
-                    }
-                    JOptionPane.showMessageDialog(parentFrame, "Productos cargados en la venta:\n" + productos);
-
-                    String nombreEliminar = JOptionPane.showInputDialog(parentFrame, "Ingrese el nombre del producto a eliminar:");
-                    ItemVenta itemAEliminar = null;
-
-                    for (ItemVenta it : itemsVenta) {
-                        if (it.getProducto().getNombre().equalsIgnoreCase(nombreEliminar)) {
-                            itemAEliminar = it;
+                    String idVenta3 = JOptionPane.showInputDialog(ventasStr3 + "\nIngrese el ID de la venta:");
+                    Venta venta3 = null;
+                    for (Venta v : ventas) {
+                        if (v.getIdVenta().equalsIgnoreCase(idVenta3)) {
+                            venta3 = v;
                             break;
                         }
                     }
 
-                    if (itemAEliminar != null) {
-                        itemsVenta.remove(itemAEliminar);
-                        JOptionPane.showMessageDialog(parentFrame, "Producto eliminado correctamente.");
-                    } else {
-                        JOptionPane.showMessageDialog(parentFrame, "Producto no encontrado en la venta.");
+                    if (venta3 == null || venta3.getItemVenta().isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Venta no encontrada o sin productos.");
+                        break;
+                    }
+
+                    StringBuilder itemsVenta = new StringBuilder("Productos en la venta:\n");
+                    for (int i = 0; i < venta3.getItemVenta().size(); i++) {
+                        ItemVenta item = venta3.getItemVenta().get(i);
+                        itemsVenta.append(i).append(". ").append(item.getProducto().getNombre())
+                                .append(" (Cant: ").append(item.getCantidad()).append(")\n");
+                    }
+
+                    try {
+                        int index = Integer.parseInt(JOptionPane.showInputDialog(itemsVenta + "\nIngrese el número del producto a eliminar:"));
+                        venta3.getItemVenta().remove(index);
+                        Venta.sobrescribirVentasArchivo(ventas);
+                        JOptionPane.showMessageDialog(null, "Producto eliminado.");
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(null, "Entrada inválida.");
                     }
                     break;
                 case "4":
-                    if (ventaActual == null) {
-                        JOptionPane.showMessageDialog(parentFrame, "No hay una venta en curso para eliminar.");
+                    if (ventas.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "No hay ventas registradas.");
                         break;
                     }
 
-                    int confirmacion = JOptionPane.showConfirmDialog(parentFrame,
-                            "¿Estás seguro de que querés eliminar esta venta completa?",
-                            "Confirmar eliminación",
-                            JOptionPane.YES_NO_OPTION);
-
-                    if (confirmacion == JOptionPane.YES_OPTION) {
-                        ventas.remove(ventaActual);
-                        ventaActual = null;
-                        JOptionPane.showMessageDialog(parentFrame, "Venta eliminada correctamente.");
-                    } else {
-                        JOptionPane.showMessageDialog(parentFrame, "Eliminación cancelada.");
+                    StringBuilder ventasStr4 = new StringBuilder("Ventas disponibles:\n");
+                    for (Venta v : ventas) {
+                        ventasStr4.append("- ID: ").append(v.getIdVenta()).append("\n");
                     }
+
+                    String idVenta4 = JOptionPane.showInputDialog(ventasStr4 + "\nIngrese el ID de la venta a eliminar:");
+                    Venta ventaAEliminar = null;
+                    for (Venta v : ventas) {
+                        if (v.getIdVenta().equalsIgnoreCase(idVenta4)) {
+                            ventaAEliminar = v;
+                            break;
+                        }
+                    }
+
+                    if (ventaAEliminar == null) {
+                        JOptionPane.showMessageDialog(null, "ID no encontrado.");
+                        break;
+                    }
+
+                    ventas.remove(ventaAEliminar);
+                    Venta.sobrescribirVentasArchivo(ventas);
+                    JOptionPane.showMessageDialog(null, "Venta eliminada con éxito.");
                     break;
                 case "5":
                     if (ventas.isEmpty()) {
