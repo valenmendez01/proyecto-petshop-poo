@@ -54,7 +54,8 @@ public class SistemaPetShop {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String comando = e.getActionCommand();
-                ArrayList<Venta> ventas = new ArrayList<>();
+                ArrayList<Producto> productos = new ArrayList<>(dataBaseProductos.obtenerProductos());
+                List<Cliente> clientes = Cliente.obtenerClientesArchivo();
 
                 switch (comando) {
                     case "1":
@@ -64,7 +65,8 @@ public class SistemaPetShop {
                         gestionarCitas();
                         break;
                     case "3":
-                        gestionarVentas(marco, ventas);
+                        List<Venta> ventas = Venta.obtenerVentasArchivo(productos, clientes);
+                        gestionarVentas(marco, new ArrayList<>(ventas));
                         break;
                     case "4":
                         gestionarPedidos(marco, new ArrayList<>());
