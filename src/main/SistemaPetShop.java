@@ -65,7 +65,7 @@ public class SistemaPetShop {
                         gestionarCitas();
                         break;
                     case "3":
-                        List<Venta> ventas = Venta.obtenerVentasArchivo(productos, clientes);
+                        List<Venta> ventas = Venta.obtenerVentasArchivo(productos);
                         gestionarVentas(marco, new ArrayList<>(ventas));
                         break;
                     case "4":
