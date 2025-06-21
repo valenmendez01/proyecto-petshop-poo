@@ -4,7 +4,6 @@ import dataBase.dataBaseProductos;
 import modelo.cliente.Cliente;
 import modelo.cliente.Mascota;
 import modelo.agenda.Turno;
-import modelo.producto.CatalogoProductos;
 import modelo.producto.Producto;
 import modelo.venta.ItemPedido;
 import modelo.venta.ItemVenta;
@@ -65,8 +64,8 @@ public class SistemaPetShop {
                         gestionarCitas();
                         break;
                     case "3":
-                        List<Venta> ventas = Venta.obtenerVentasArchivo(productos);
-                        gestionarVentas(marco, new ArrayList<>(ventas));
+                        List<Venta> ventas = Venta.obtenerVentasArchivo(productos, clientes);
+                        gestionarVentas(marco, new ArrayList<>(ventas), new ArrayList<>(clientes));
                         break;
                     case "4":
                         gestionarPedidos(marco, new ArrayList<>());
@@ -137,6 +136,7 @@ public class SistemaPetShop {
             switch (opcion) {
                 case 1:
                     Cliente.agregarClienteArchivo(scanner);
+
                     break;
                 case 2:
                     if (Cliente.actualizarClienteArchivo(scanner)) {
@@ -401,7 +401,7 @@ public class SistemaPetShop {
                     String idProd = JOptionPane.showInputDialog(lista + "\nIngrese el ID del producto:");
                     Producto seleccionado = null;
                     for (Producto p : productos) {
-                        if (p.getIdProducto().equalsIgnoreCase(idProd)) {
+                        if (p.getIdProducto()==Integer.parseInt(idProd)) {
                             seleccionado = p;
                             break;
                         }
@@ -491,9 +491,10 @@ public class SistemaPetShop {
         } while (!"6".equals(opcion));
     }
 
-    public static void gestionarVentas(JFrame parentFrame, ArrayList<Venta> ventas) {
+    public static void gestionarVentas(JFrame parentFrame, ArrayList<Venta> ventas, ArrayList<Cliente> clientes) {
         Venta ventaActual = null;
         String opcion;
+
 
         do {
             opcion = JOptionPane.showInputDialog(parentFrame,
@@ -512,25 +513,37 @@ public class SistemaPetShop {
                         break;
                     }
 
-                    String idVenta = JOptionPane.showInputDialog(parentFrame, "Ingrese un ID para la nueva venta:");
-                    if (idVenta == null || idVenta.isEmpty()) {
-                        JOptionPane.showMessageDialog(parentFrame, "ID inválido.");
+                    Scanner scanner = new Scanner(System.in);
+                    String idClienteInput = JOptionPane.showInputDialog(parentFrame, "Ingrese el ID del cliente, deje vacío para crear un nuevo cliente:");
+
+                    int idBuscado;
+                    if (idClienteInput == null || idClienteInput.isEmpty()) {
+                        Cliente cliente = Cliente.agregarClienteArchivo(scanner);
+                        idBuscado = cliente.getIdCliente();
+                        clientes.add(cliente);
+                    } else {
+                        idBuscado = Integer.parseInt(idClienteInput);
+                    }
+
+                    final int idFinal = idBuscado; // <- efectivamente final
+
+                    Cliente cliente = clientes.stream()
+                            .filter(c -> c.getIdCliente() == idFinal)
+                            .findFirst()
+                            .orElse(null);
+
+                    if (cliente == null) {
+                        JOptionPane.showMessageDialog(parentFrame, "Cliente no encontrado.");
                         break;
                     }
 
-                    String nombreCliente = JOptionPane.showInputDialog(parentFrame, "Nombre del cliente:");
-                    String apellidoCliente = JOptionPane.showInputDialog(parentFrame, "Apellido del cliente:");
-                    String telefonoCliente = JOptionPane.showInputDialog(parentFrame, "Teléfono del cliente:");
-                    String direccionCliente = JOptionPane.showInputDialog(parentFrame, "Dirección del cliente:");
-
-                    Cliente cliente = new Cliente(nombreCliente, apellidoCliente, telefonoCliente, direccionCliente);
 
                     // Parámetros restantes para Venta
                     Date fechaVenta = new Date(); // Fecha actual
                     double montoTotal = 0.0; // Se calcula al final
                     String metodoPago = JOptionPane.showInputDialog(parentFrame, "Método de pago:");
 
-                    ventaActual = new Venta(idVenta, cliente, fechaVenta, montoTotal, metodoPago, new ArrayList<>());
+                    ventaActual = new Venta(cliente, fechaVenta, montoTotal, metodoPago, new ArrayList<>());
                     Venta.guardarVentaArchivo(ventaActual);
                     ventas.add(ventaActual);
                     JOptionPane.showMessageDialog(parentFrame, "Venta creada y guardada correctamente.");
@@ -550,7 +563,7 @@ public class SistemaPetShop {
                     String idBuscar = JOptionPane.showInputDialog(ventasDisponibles + "\nIngrese el ID de la venta:");
                     Venta ventaSeleccionada = null;
                     for (Venta v : ventas) {
-                        if (v.getIdVenta().equalsIgnoreCase(idBuscar)) {
+                        if (v.getIdVenta()==Integer.parseInt(idBuscar)) {
                             ventaSeleccionada = v;
                             break;
                         }
@@ -577,7 +590,7 @@ public class SistemaPetShop {
                     String idProd = JOptionPane.showInputDialog(lista + "\nIngrese el ID del producto:");
                     Producto seleccionado = null;
                     for (Producto p : productos) {
-                        if (p.getIdProducto().equalsIgnoreCase(idProd)) {
+                        if (p.getIdProducto()==Integer.parseInt(idProd)) {
                             seleccionado = p;
                             break;
                         }
@@ -617,7 +630,7 @@ public class SistemaPetShop {
                     String idVenta3 = JOptionPane.showInputDialog(ventasStr3 + "\nIngrese el ID de la venta:");
                     Venta venta3 = null;
                     for (Venta v : ventas) {
-                        if (v.getIdVenta().equalsIgnoreCase(idVenta3)) {
+                        if (v.getIdVenta()==Integer.parseInt(idVenta3)) {
                             venta3 = v;
                             break;
                         }
@@ -658,7 +671,7 @@ public class SistemaPetShop {
                     String idVenta4 = JOptionPane.showInputDialog(ventasStr4 + "\nIngrese el ID de la venta a eliminar:");
                     Venta ventaAEliminar = null;
                     for (Venta v : ventas) {
-                        if (v.getIdVenta().equalsIgnoreCase(idVenta4)) {
+                        if (v.getIdVenta()==Integer.parseInt(idVenta4)) {
                             ventaAEliminar = v;
                             break;
                         }

@@ -95,7 +95,7 @@ public class Cliente {
     }
 
     // Agregar un cliente nuevo
-    public static void agregarClienteArchivo(Scanner scanner) {
+    public static Cliente agregarClienteArchivo(Scanner scanner) {
         inicializarContadorId();
 
         System.out.print("Ingrese el nombre del cliente: ");
@@ -122,6 +122,7 @@ public class Cliente {
         }
 
         System.out.println("Cliente creado con ID: " + cliente.getIdCliente());
+        return cliente;
     }
 
     // Eliminar cliente por ID

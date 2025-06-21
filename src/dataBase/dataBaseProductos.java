@@ -23,7 +23,7 @@ public class dataBaseProductos {
                 try {
                     if (partes.length == 8) {
                         ArticuloVarios articulo = new ArticuloVarios(
-                                partes[0], partes[1],
+                                Integer.parseInt(partes[0]), partes[1],
                                 Double.parseDouble(partes[2]),
                                 Integer.parseInt(partes[3]),
                                 partes[4], partes[5], partes[6], partes[7]
@@ -33,7 +33,7 @@ public class dataBaseProductos {
                         Date fechaVencimiento = Date.valueOf(partes[7]);
 
                         AlimentoMascota alimento = new AlimentoMascota(
-                                partes[0], partes[1],
+                                Integer.parseInt(partes[0]), partes[1],
                                 Double.parseDouble(partes[2]),
                                 Integer.parseInt(partes[3]),
                                 partes[4], partes[5], partes[6],
@@ -103,7 +103,7 @@ public class dataBaseProductos {
         boolean encontrado = false;
 
         for (int i = 0; i < productos.size(); i++) {
-            if (productos.get(i).getIdProducto().equals(producto.getIdProducto())) {
+            if (productos.get(i).getIdProducto()==(producto.getIdProducto())) {
                 productos.set(i, producto);
                 encontrado = true;
                 break;
@@ -123,7 +123,7 @@ public class dataBaseProductos {
                 } else if (p instanceof AlimentoMascota) {
                     linea = lineaProducto((AlimentoMascota) p);
                 } else {
-                    continue; // ignorar tipos desconocidos
+                    continue;
                 }
 
                 writer.write(linea);

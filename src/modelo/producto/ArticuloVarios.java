@@ -5,12 +5,20 @@ public class ArticuloVarios extends Producto {
     private String marca;
     private String material;
 
-    public ArticuloVarios(String idProducto, String nombre, double precio, int stock, String descripcion, String categoria, String marca, String material) {
+    public ArticuloVarios(String nombre, double precio, int stock, String descripcion, String categoria, String marca, String material) {
+        super(nombre, precio, stock, descripcion);
+        this.categoria = categoria;
+        this.marca = marca;
+        this.material = material;
+    }
+
+    public ArticuloVarios(int idProducto, String nombre, double precio, int stock, String descripcion, String categoria, String marca, String material) {
         super(idProducto, nombre, precio, stock, descripcion);
         this.categoria = categoria;
         this.marca = marca;
         this.material = material;
     }
+
     public String getCategoria() {
         return categoria;
     }

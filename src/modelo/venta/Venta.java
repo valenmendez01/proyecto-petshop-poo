@@ -4,21 +4,26 @@ import modelo.cliente.Cliente;
 import modelo.producto.Producto;
 
 import java.io.*;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class Venta {
-    private String idVenta;
+    private int idVenta;
     private Cliente cliente;
     private Date fechaVenta;
     private double montoTotal;
     private String metodoPago;
     private List<ItemVenta> itemVenta;
 
-    public Venta(String idVenta, Cliente cliente, Date fechaVenta, double montoTotal, String metodoPago, List<ItemVenta> itemVenta) {
+    public Venta(Cliente cliente, Date fechaVenta, double montoTotal, String metodoPago, List<ItemVenta> itemVenta) {
+        this.idVenta = idVenta;
+        this.cliente = cliente;
+        this.fechaVenta = fechaVenta;
+        this.montoTotal = montoTotal;
+        this.metodoPago = metodoPago;
+        this.itemVenta = itemVenta;
+    }
+    private Venta(int idVenta, Cliente cliente, Date fechaVenta, double montoTotal, String metodoPago, List<ItemVenta> itemVenta) {
         this.idVenta = idVenta;
         this.cliente = cliente;
         this.fechaVenta = fechaVenta;
@@ -28,11 +33,8 @@ public class Venta {
     }
 
 
-    public String getIdVenta() {
+    public int getIdVenta() {
         return idVenta;
-    }
-    public void setIdVenta(String idVenta) {
-        this.idVenta = idVenta;
     }
     public Cliente getCliente() {
         return cliente;
@@ -87,29 +89,37 @@ public class Venta {
         }
         return total;
     }
+
     public static void guardarVentaArchivo(Venta venta) {
-        String archivo = "src/datos/venta.txt";
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/datos/ventas.txt", true))) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(venta.getIdVenta()).append(";")
-                    .append(venta.getCliente().getNombre()).append(";")
-                    .append(venta.getFechaVenta()).append(";")
-                    .append(venta.getMontoTotal()).append(";");
+        String archivo = "src/datos/ventas.txt";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivo, true))) {
+            StringBuilder itemsTexto = new StringBuilder();
             for (ItemVenta item : venta.getItemVenta()) {
-                sb.append(item.getProducto().getIdProducto()).append(";")
-                        .append(item.getCantidad()).append(";")
-                        .append(item.getSubtotal()).append(";");
+                itemsTexto.append(item.getProducto().getIdProducto()).append(",")
+                        .append(item.getCantidad()).append(",")
+                        .append(item.getSubtotal()).append("|");
             }
-            if (!venta.getItems().isEmpty()){
-                sb.setLength(sb.length()-1);
+            if (itemsTexto.length() > 0) {
+                itemsTexto.setLength(itemsTexto.length() - 1); // Quitar último "|"
             }
-            writer.write(sb.toString());
+
+            String linea = venta.getIdVenta() + ";" +
+                    (venta.getCliente() != null ? venta.getCliente().getNombre() : "SinCliente") + ";" +
+                    sdf.format(venta.getFechaVenta()) + ";" +
+                    venta.getMetodoPago() + ";" +
+                    itemsTexto.toString();
+
+            writer.write(linea);
             writer.newLine();
+
         } catch (IOException e) {
-            System.out.println("Error al guardar venta" + e.getMessage());
+            System.out.println("Error al guardar venta: " + e.getMessage());
         }
     }
-    public static List<Venta> obtenerVentasArchivo(List<Producto> productos) {
+
+    public static List<Venta> obtenerVentasArchivo(List<Producto> productos, List<Cliente> clientes) {
         List<Venta> ventas = new ArrayList<>();
         String archivo = "src/datos/ventas.txt";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -120,42 +130,39 @@ public class Venta {
                 String[] partes = linea.split(";", 5);
                 if (partes.length < 5) continue;
 
-                String idVenta = partes[0];
-                String nombreCliente = partes[1]; // Se ignora en esta versión
+                int idVenta = Integer.parseInt(partes[0]);
+                String nombreCliente = partes[1];
                 Date fecha = sdf.parse(partes[2]);
                 String metodoPago = partes[3];
                 String itemsTexto = partes[4];
+
+                // Buscar cliente por nombre
+                Cliente cliente = clientes.stream()
+                        .filter(c -> c.getNombre().equalsIgnoreCase(nombreCliente))
+                        .findFirst()
+                        .orElse(null);
 
                 List<ItemVenta> items = new ArrayList<>();
                 for (String itemStr : itemsTexto.split("\\|")) {
                     String[] itemPartes = itemStr.split(",");
                     if (itemPartes.length < 3) continue;
 
-                    String idProd = itemPartes[0];
+                    int idProd = Integer.parseInt(itemPartes[0]);
                     int cantidad = Integer.parseInt(itemPartes[1]);
                     double subtotal = Double.parseDouble(itemPartes[2]);
 
-                    Producto prod = null;
-                    for (Producto p : productos) {
-                        if (p.getIdProducto().equals(idProd)) {
-                            prod = p;
-                            break;
-                        }
-                    }
+                    Producto prod = productos.stream()
+                            .filter(p -> p.getIdProducto()==(idProd))
+                            .findFirst()
+                            .orElse(null);
 
                     if (prod != null) {
-                        double precioUnitario = prod.getPrecio();
-                        items.add(new ItemVenta(prod, cantidad, precioUnitario, subtotal));
+                        items.add(new ItemVenta(prod, cantidad, prod.getPrecio(), subtotal));
                     }
                 }
 
-                double montoTotal = 0;
-                for (ItemVenta item : items) {
-                    montoTotal += item.getSubtotal();
-                }
-
-                // En vez de pasar un cliente real, solo usamos el nombre como string o null
-                ventas.add(new Venta(idVenta, null, fecha, montoTotal, metodoPago, items));
+                double montoTotal = items.stream().mapToDouble(ItemVenta::getSubtotal).sum();
+                ventas.add(new Venta(idVenta, cliente, fecha, montoTotal, metodoPago, items));
             }
 
         } catch (Exception e) {
@@ -165,8 +172,11 @@ public class Venta {
         return ventas;
     }
 
+    // Sobrescribir archivo con todas las ventas
     public static void sobrescribirVentasArchivo(List<Venta> ventas) {
-        String archivo = "src/datos/venta.txt";
+        String archivo = "src/datos/ventas.txt";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivo))) {
             for (Venta v : ventas) {
                 StringBuilder itemsTexto = new StringBuilder();
@@ -175,14 +185,13 @@ public class Venta {
                             .append(item.getCantidad()).append(",")
                             .append(item.getSubtotal()).append("|");
                 }
-                // Eliminar el último "|"
                 if (itemsTexto.length() > 0) {
-                    itemsTexto.setLength(itemsTexto.length() - 1);
+                    itemsTexto.setLength(itemsTexto.length() - 1); // eliminar Ãºltimo "|"
                 }
 
                 String linea = v.getIdVenta() + ";" +
-                        v.getCliente().getNombre() + ";" +
-                        v.getFechaVenta() + ";" +
+                        (v.getCliente() != null ? v.getCliente().getNombre() : "SinCliente") + ";" +
+                        sdf.format(v.getFechaVenta()) + ";" +
                         v.getMetodoPago() + ";" +
                         itemsTexto.toString();
 
@@ -193,7 +202,28 @@ public class Venta {
             System.out.println("Error al sobrescribir ventas: " + e.getMessage());
         }
     }
+    private int inicializarContadorId() {
+        File archivo = new File("src/datos/ventas.txt");
 
+        int maxId = 0;
 
+        if (archivo.exists()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
+                String linea;
+                while ((linea = reader.readLine()) != null) {
+                    String[] partes = linea.split(";");
+                    if (partes.length >= 1) {
+                        int id = Integer.parseInt(partes[0]);
+                        if (id > maxId) {
+                            maxId = id;
+                        }
+                    }
+                }
+            } catch (IOException | NumberFormatException e) {
+                System.out.println("Error al leer IDs del archivo: " + e.getMessage());
+            }
+        }
 
+        return maxId + 1;
+    }
 }

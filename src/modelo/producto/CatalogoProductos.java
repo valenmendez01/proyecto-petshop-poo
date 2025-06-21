@@ -22,21 +22,21 @@ public class CatalogoProductos {
             System.out.println("----------------------");
         });
     }
-    public Producto obtenerPorId(String id) {
+    public Producto obtenerPorId(int id) {
         return this.productos.stream()
-                .filter(producto -> producto.getIdProducto().equals(id))
+                .filter(producto -> producto.getIdProducto()==(id))
                 .findFirst()
                 .orElse(null);
     }
-    public void actualizarStock(String id, int cantidad) {
+    public void actualizarStock(int id, int cantidad) {
         Producto producto = this.obtenerPorId(id);
         producto.setStock(cantidad);
     }
-    public void anadirStock(String id, int cantidad) {
+    public void anadirStock(int id, int cantidad) {
         Producto producto = this.obtenerPorId(id);
         producto.setStock(cantidad + cantidad);
     }
-    public void restarStock(String id, int cantidad) {
+    public void restarStock(int id, int cantidad) {
         Producto producto = this.obtenerPorId(id);
         producto.setStock(cantidad - producto.getStock());
     }

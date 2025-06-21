@@ -131,7 +131,7 @@ public class Pedido {
                     // Buscar el producto por ID
                     Producto producto = null;
                     for (Producto p : productos) {
-                        if (p.getIdProducto().equals(idProducto)) {
+                        if (p.getIdProducto()==Integer.parseInt(idProducto)) {
                             producto = p;
                             break;
                         }
