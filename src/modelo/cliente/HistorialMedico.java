@@ -100,7 +100,7 @@ public class HistorialMedico {
     // Obtener todos los historiales médicos del archivo
     public static List<HistorialMedico> obtenerHistorialesArchivo() {
         List<HistorialMedico> historiales = new ArrayList<HistorialMedico>();
-        File archivo = new File("datos/historiales_medicos.txt");
+        File archivo = new File("src/datos/historiales_medicos.txt");
 
         // Si el archivo no existe, devolver lista vacía
         if (!archivo.exists()) {
@@ -261,8 +261,8 @@ public class HistorialMedico {
     // Eliminar todos los historiales de una mascota específica.
     // Se usa en la clase Mascota (eliminarMascotaArchivo() y eliminarMascotasPorIdCliente())
     public static boolean eliminarHistorialesPorIdMascota(int idMascota) {
-        File inputFile = new File("datos/historiales.txt");
-        File tempFile = new File("datos/historiales_temp.txt");
+        File inputFile = new File("src/datos/historiales.txt");
+        File tempFile = new File("src/datos/historiales_temp.txt");
 
         if (!inputFile.exists()) {
             return false;

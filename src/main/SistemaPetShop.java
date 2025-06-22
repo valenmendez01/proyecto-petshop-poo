@@ -154,16 +154,17 @@ public class SistemaPetShop {
                     }
                     break;
                 case 4:
+                    System.out.println("------- LISTA DE CLIENTES -------");
                     List<Cliente> clientes = Cliente.obtenerClientesArchivo();
 
                     if (clientes.isEmpty()) {
                         System.out.println("No hay clientes registrados.");
-                        return;
                     } else {
                         for (Cliente cliente : clientes) {
                             System.out.println(cliente.toString());
                         }
                     }
+                    System.out.println("--------------");
                     break;
                 case 5:
                     int agregarOtra;
@@ -189,16 +190,16 @@ public class SistemaPetShop {
                     }
                     break;
                 case 8:
-                    List<Mascota> mascotas = Mascota.obtenerMascotasArchivo();
+                    List<Mascota> mascotas = Mascota.obtenerMascotasPorCliente(scanner);
 
                     if (mascotas.isEmpty()) {
                         System.out.println("No hay mascotas registradas.");
-                        return;
                     } else {
                         for (Mascota m : mascotas) {
                             System.out.println(m.toString());
                         }
                     }
+                    System.out.println("--------------");
                     break;
                 case 9:
                     HistorialMedico.agregarHistorialArchivo(scanner);
@@ -218,11 +219,10 @@ public class SistemaPetShop {
                     }
                     break;
                 case 12:
-                    List<HistorialMedico> historiales = HistorialMedico.obtenerHistorialesArchivo();
+                    List<HistorialMedico> historiales = HistorialMedico.obtenerHistorialesPorMascota(scanner);
 
                     if (historiales.isEmpty()) {
-                        System.out.println("No hay historiales registradas.");
-                        return;
+                        System.out.println("No hay historiales registrados.");
                     } else {
                         for (HistorialMedico h : historiales) {
                             System.out.println(h.toString());
@@ -278,7 +278,6 @@ public class SistemaPetShop {
 
                     if (turnos.isEmpty()) {
                         System.out.println("No hay turnos registrados.");
-                        return;
                     } else {
                         for (Turno t : turnos) {
                             System.out.println(t.toString());

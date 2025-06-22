@@ -90,12 +90,12 @@ public class Turno {
 
         List<Mascota> listaMascota = Mascota.obtenerMascotasPorCliente(scanner);
         // ver idMascotas del cliente deseado
-        System.out.print("Nombre e id de las mascotas del cliente: ");
+        System.out.print("Nombre e id de las mascotas del cliente: " + "\n");
         for (Mascota mascota : listaMascota) {
-            System.out.println("Nombre: " + mascota.getNombre() + " - Id" + mascota.getIdMascota());
+            System.out.println("Nombre: " + mascota.getNombre() + " - Id " + mascota.getIdMascota());
         }
         // indicar el idMascota a asignar turno
-        System.out.print("Ingrese el id de la mascota a asignar turno:");
+        System.out.print("Ingrese el id de la mascota a asignar turno: ");
         int idMascota = scanner.nextInt();
         scanner.nextLine();
 

@@ -139,7 +139,7 @@ public class Cliente {
             if (Mascota.eliminarMascotasPorIdCliente(idEliminar)){
                 System.out.println("Mascota asociada al cliente eliminada");
             } else {
-                System.out.println("Error al eliminar a la mascota asociada al cliente");
+                System.out.println("El cliente no posee mascotas para eliminar");
             }
 
             // Los historiales se eliminan automáticamente al eliminar las mascotas
@@ -192,6 +192,10 @@ public class Cliente {
     // Actualizar cliente por ID
     public static boolean actualizarClienteArchivo(Scanner scanner) {
 
+        System.out.print("Ingrese el ID del cliente a modificar: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
         System.out.print("Nuevo nombre: ");
         String nombre = scanner.nextLine();
         System.out.print("Nuevo apellido: ");
@@ -201,10 +205,6 @@ public class Cliente {
         System.out.print("Nueva dirección: ");
         String direccion = scanner.nextLine();
         Cliente cliente = new Cliente(nombre, apellido, telefono, direccion);
-
-        System.out.print("Ingrese el ID del cliente a modificar: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
 
         File inputFile = new File("src/datos/clientes.txt");
         File tempFile = new File("src/datos/clientes_temp.txt");
