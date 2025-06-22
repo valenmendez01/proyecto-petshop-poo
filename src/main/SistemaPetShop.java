@@ -2,6 +2,7 @@ package main;
 
 import dataBase.dataBaseProductos;
 import modelo.cliente.Cliente;
+import modelo.cliente.HistorialMedico;
 import modelo.cliente.Mascota;
 import modelo.agenda.Turno;
 import modelo.producto.Producto;
@@ -200,16 +201,33 @@ public class SistemaPetShop {
                     }
                     break;
                 case 9:
-                    //HistorialMedico.agregarHistorialArchivo(scanner);
+                    HistorialMedico.agregarHistorialArchivo(scanner);
                     break;
                 case 10:
-                    //HistorialMedico.actualizarHistorialArchivo(scanner);
+                    if (HistorialMedico.actualizarHistorialArchivo(scanner)) {
+                        System.out.println("Historial actualizado con éxito");
+                    } else {
+                        System.out.println("Historial no encontrado");
+                    }
                     break;
                 case 11:
-                    //HistorialMedico.eliminarHistorialArchivo(scanner);
+                    if (HistorialMedico.eliminarHistorialArchivo(scanner)) {
+                        System.out.println("Historial eliminado con éxito");
+                    } else {
+                        System.out.println("Historial no encontrado");
+                    }
                     break;
                 case 12:
-                    //HistorialMedico.obtenerHistorialesPorMascota(scanner);
+                    List<HistorialMedico> historiales = HistorialMedico.obtenerHistorialesArchivo();
+
+                    if (historiales.isEmpty()) {
+                        System.out.println("No hay historiales registradas.");
+                        return;
+                    } else {
+                        for (HistorialMedico h : historiales) {
+                            System.out.println(h.toString());
+                        }
+                    }
                     break;
                 default:
                     System.out.println("Opción inválida. Intente nuevamente.");

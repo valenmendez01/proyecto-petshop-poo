@@ -200,48 +200,6 @@ public class Mascota {
         return encontrado;
     };
 
-    // Obtener mascotas por cliente específico
-    public static List<Mascota> obtenerMascotasPorCliente(Scanner scanner) {
-        System.out.println("Ingrese el id del cliente: ");
-        int idCliente = scanner.nextInt();
-
-        List<Mascota> mascotas = new ArrayList<Mascota>();
-
-        if (validarExistenciaCliente(idCliente)) {
-            System.out.println("Cliente encontrado");
-
-            File archivo = new File("src/datos/mascotas.txt");
-
-            if (!archivo.exists()) {
-                return mascotas;
-            }
-
-            try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
-                String linea;
-                while ((linea = reader.readLine()) != null) {
-                    String[] datos = linea.split(",");
-                    if (datos.length == 8) {
-                        int idClienteLeido = Integer.parseInt(datos[1]);
-
-                        if (idClienteLeido == idCliente) {
-                            Mascota m = new Mascota(Integer.parseInt(datos[1]), datos[2], datos[3], datos[4], datos[5], Integer.parseInt(datos[6]), Double.parseDouble(datos[7]));
-                            int id = Integer.parseInt(datos[0]);
-                            m.setIdMascota(id);
-                            mascotas.add(m);
-                        }
-                    }
-                }
-            } catch (IOException | NumberFormatException e) {
-                System.out.println("Error al leer mascotas: " + e.getMessage());
-            }
-
-        } else {
-            System.out.println("Cliente no encontrado o no existente");
-        }
-
-        return mascotas;
-    }
-
     // Eliminar mascota por ID. Se usa desde el main, por lo que hay que buscar el cliente que corresponda
     public static boolean eliminarMascotaArchivo(Scanner scanner) {
 
@@ -277,6 +235,9 @@ public class Mascota {
                     if (id != idEliminar) {
                         writer.write(linea + "\n");
                     } else {
+                        // Elimina los historiales asociados a esa mascota
+                        HistorialMedico.eliminarHistorialesPorIdMascota(idEliminar);
+
                         eliminado = true;
                     }
                 }
@@ -299,6 +260,7 @@ public class Mascota {
 
     // Eliminar todas las mascotas de un cliente específico. Se usa en la clase Cliente
     public static boolean eliminarMascotasPorIdCliente(int idCliente) {
+
         File inputFile = new File("datos/mascotas.txt");
         File tempFile = new File("datos/mascotas_temp.txt");
 
@@ -319,6 +281,10 @@ public class Mascota {
                     if (idClienteLeido != idCliente) {
                         writer.write(linea + "\n");
                     } else {
+                        int idMascotaEliminar = Integer.parseInt(datos[0]);
+                        // Elimina los historiales asociados a esa mascota
+                        HistorialMedico.eliminarHistorialesPorIdMascota(idMascotaEliminar);
+
                         eliminado = true;
                     }
                 }
@@ -383,7 +349,7 @@ public class Mascota {
             String linea;
             while ((linea = reader.readLine()) != null) {
                 String[] datos = linea.split(",");
-                if (datos.length == 5) {
+                if (datos.length == 8) {
                     if (mascotaId == Integer.parseInt(datos[0])) {
                         writer.write(mascotaId + "," +
                             mascotaActualizar.getIdCliente() + "," +
@@ -413,6 +379,48 @@ public class Mascota {
         }
 
         return actualizado;
+    }
+
+    // Obtener mascotas por cliente específico
+    public static List<Mascota> obtenerMascotasPorCliente(Scanner scanner) {
+        System.out.println("Ingrese el id del cliente: ");
+        int idCliente = scanner.nextInt();
+
+        List<Mascota> mascotas = new ArrayList<Mascota>();
+
+        if (validarExistenciaCliente(idCliente)) {
+            System.out.println("Cliente encontrado");
+
+            File archivo = new File("src/datos/mascotas.txt");
+
+            if (!archivo.exists()) {
+                return mascotas;
+            }
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
+                String linea;
+                while ((linea = reader.readLine()) != null) {
+                    String[] datos = linea.split(",");
+                    if (datos.length == 8) {
+                        int idClienteLeido = Integer.parseInt(datos[1]);
+
+                        if (idClienteLeido == idCliente) {
+                            Mascota m = new Mascota(Integer.parseInt(datos[1]), datos[2], datos[3], datos[4], datos[5], Integer.parseInt(datos[6]), Double.parseDouble(datos[7]));
+                            int id = Integer.parseInt(datos[0]);
+                            m.setIdMascota(id);
+                            mascotas.add(m);
+                        }
+                    }
+                }
+            } catch (IOException | NumberFormatException e) {
+                System.out.println("Error al leer mascotas: " + e.getMessage());
+            }
+
+        } else {
+            System.out.println("Cliente no encontrado o no existente");
+        }
+
+        return mascotas;
     }
 
     public static void inicializarContadorId() {
