@@ -17,14 +17,16 @@ public class Turno {
     private String fecha;
     private String horaInicio;
     private String horaFin;
+    private double precioTotal;
 
-    public Turno(int idMascota, Servicio servicio, String fecha, String horaInicio, String horaFin) {
+    public Turno(int idMascota, Servicio servicio, String fecha, String horaInicio, String horaFin, double precioTotal) {
         this.idTurno = contadorId++;
         this.idMascota = idMascota;
         this.servicio = servicio;
         this.fecha = fecha;
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;
+        this.precioTotal = precioTotal;
     }
 
     public int getIdTurno() {
@@ -75,83 +77,13 @@ public class Turno {
         this.horaFin = horaFin;
     }
 
-    public List<Turno> obtenerTurnosPorMascota(Scanner scanner){
-        System.out.print("Ingrese el id de la mascota: ");
-        int idMascota = scanner.nextInt();
-        scanner.nextLine();
-
-        List<Turno> turnos = new ArrayList<Turno>();
-
-        System.out.print("Mascota encontrada");
-
-        File archivo = new File("src/datos/turnos.txt");
-
-        if (!archivo.exists()) {
-            return turnos;
-        }
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
-            String linea;
-            while ((linea = reader.readLine()) != null) {
-                String[] datos = linea.split(",");
-                if (datos.length >= 8) {
-                    int idMascotaLeido = Integer.parseInt(datos[1]);
-                    if (idMascotaLeido == idMascota) {
-                        String tipoServicio = datos[2];
-
-                        Servicio servicio = null;
-                        switch (tipoServicio) {
-                            case "Cirugia":
-                                // ejemplo de campos: precio, nombre, bloques, requiereAnestesia
-                                double precioC = Double.parseDouble(datos[3]);
-                                String nombreC = datos[4];
-                                int bloquesC = Integer.parseInt(datos[5]);
-                                boolean anestesia = Boolean.parseBoolean(datos[6]);
-                                servicio = new Cirugia(precioC, nombreC, bloquesC, anestesia);
-                                break;
-                            case "Paseo":
-                                double precioP = Double.parseDouble(datos[3]);
-                                String nombreP = datos[4];
-                                int bloquesP = Integer.parseInt(datos[5]);
-                                boolean individual = Boolean.parseBoolean(datos[6]);
-                                servicio = new Paseo(precioP, nombreP, bloquesP, individual);
-                                break;
-                            case "Veterinaria":
-                                double precioV = Double.parseDouble(datos[3]);
-                                String nombreV = datos[4];
-                                int bloquesV = Integer.parseInt(datos[5]);
-                                boolean urgencia = Boolean.parseBoolean(datos[6]);
-                                servicio = new Veterinaria(precioV, nombreV, bloquesV, urgencia);
-                                break;
-                            case "Peluqueria":
-                                double precioPel = Double.parseDouble(datos[3]);
-                                String nombrePel = datos[4];
-                                int bloquesPel = Integer.parseInt(datos[5]);
-                                boolean corte = Boolean.parseBoolean(datos[6]);
-                                servicio = new Peluqueria(precioPel, nombrePel, bloquesPel, corte);
-                                break;
-                            default:
-                                System.out.println("Servicio no reconocido: " + tipoServicio);
-                                continue;
-                        }
-
-                        String fecha = datos[7];
-                        String horaInicio = datos[8];
-                        String horaFin = datos[9];
-
-                        Turno t = new Turno(idMascotaLeido, servicio, fecha, horaInicio, horaFin);
-                        t.setIdTurno(Integer.parseInt(datos[0]));
-                        turnos.add(t);
-                    }
-                }
-            }
-        } catch (IOException | NumberFormatException e) {
-            System.out.println("Error al leer turnos: " + e.getMessage());
-        }
-
-        return turnos;
+    public double getPrecioTotal() {
+        return precioTotal;
     }
 
+    public void setPrecioTotal(double precioTotal) {
+        this.precioTotal = precioTotal;
+    }
 
     public static void agregarTurnoArchivo(Scanner scanner){
         inicializarContadorId();
@@ -173,8 +105,6 @@ public class Turno {
         String fecha = scanner.nextLine();
         scanner.nextLine();
 
-        // habría que mostrar los horarios disponibles
-
         System.out.print("Ingrese el horario de inicio (hh:mm): ");
         String horaInicio = scanner.nextLine();
         scanner.nextLine();
@@ -182,9 +112,13 @@ public class Turno {
         String horaFin = scanner.nextLine();
         scanner.nextLine();
 
-        // habría que validar lo elegido
+        double precioTotal = 0;
 
-        Turno turno = new Turno(idMascota, servicio, fecha, horaInicio, horaFin);
+        Turno turno = new Turno(idMascota, servicio, fecha, horaInicio, horaFin, precioTotal);
+
+        // Calcula al precio total y setea al precio del turno antes de agregarlo al archivo
+        double precioTotalCalculado = servicio.calcularCosto(turno);
+        turno.setPrecioTotal(precioTotalCalculado);
 
         File archivo = new File("src/datos/turnos.txt");
 
@@ -215,15 +149,12 @@ public class Turno {
 
         switch (opcion) {
             case 1:
-                System.out.print("Ingrese el precio del bloque: ");
+                System.out.print("Ingrese el precio: ");
                 double precioBloque = scanner.nextDouble();
                 scanner.nextLine();
 
                 System.out.print("Ingrese el nombre del cirujano: ");
                 String nombre = scanner.nextLine();
-
-                System.out.print("Ingrese la cantidad de bloques del turno: ");
-                int cantidadBloques = scanner.nextInt();
 
                 System.out.print("¿Requiere anestesia? (Y/N): ");
                 String requiere = scanner.nextLine();
@@ -233,17 +164,14 @@ public class Turno {
                     requiereAnestesia = true;
                 }
 
-                return new Cirugia(precioBloque, nombre, cantidadBloques, requiereAnestesia);
+                return new Cirugia(precioBloque, nombre, requiereAnestesia);
             case 2:
-                System.out.print("Ingrese el precio del bloque: ");
+                System.out.print("Ingrese el precio: ");
                 double precioBloque2 = scanner.nextDouble();
                 scanner.nextLine();
 
                 System.out.print("Ingrese el nombre del paseador: ");
                 String nombre2 = scanner.nextLine();
-
-                System.out.print("Ingrese la cantidad de bloques del turno: ");
-                int cantidadBloques2 = scanner.nextInt();
 
                 System.out.print("¿Será un paseo individual? (Y/N): ");
                 String esIndividual = scanner.nextLine();
@@ -252,17 +180,14 @@ public class Turno {
                 if (esIndividual.equals("Y")) {
                     individual = true;
                 }
-                return new Paseo(precioBloque2, nombre2, cantidadBloques2, individual);
+                return new Paseo(precioBloque2, nombre2, individual);
             case 3:
-                System.out.print("Ingrese el precio del bloque: ");
+                System.out.print("Ingrese el precio: ");
                 double precioBloque3 = scanner.nextDouble();
                 scanner.nextLine();
 
                 System.out.print("Ingrese el nombre del veterinario: ");
                 String nombre3 = scanner.nextLine();
-
-                System.out.print("Ingrese la cantidad de bloques del turno: ");
-                int cantidadBloques3 = scanner.nextInt();
 
                 System.out.print("¿Es una urgencia? (Y/N): ");
                 String urgencia = scanner.nextLine();
@@ -271,17 +196,14 @@ public class Turno {
                 if (urgencia.equals("Y")) {
                     esUrgencial = true;
                 }
-                return new Veterinaria(precioBloque3, nombre3, cantidadBloques3, esUrgencial);
+                return new Veterinaria(precioBloque3, nombre3, esUrgencial);
             case 4:
-                System.out.print("Ingrese el precio del bloque: ");
+                System.out.print("Ingrese el precio: ");
                 double precioBloque4 = scanner.nextDouble();
                 scanner.nextLine();
 
                 System.out.print("Ingrese el nombre del peluquero: ");
                 String nombre4 = scanner.nextLine();
-
-                System.out.print("Ingrese la cantidad de bloques del turno: ");
-                int cantidadBloques4 = scanner.nextInt();
 
                 System.out.print("¿Será un paseo individual? (Y/N): ");
                 String incluye = scanner.nextLine();
@@ -290,7 +212,7 @@ public class Turno {
                 if (incluye.equals("Y")) {
                     incluyeCorteUnas = true;
                 }
-                return new Peluqueria(precioBloque4, nombre4, cantidadBloques4, incluyeCorteUnas);
+                return new Peluqueria(precioBloque4, nombre4, incluyeCorteUnas);
             default:
                 System.out.println("Opción inválida.");
                 return null;
@@ -315,37 +237,33 @@ public class Turno {
                 if (datos.length >= 8) {
                     String tipoServicio = datos[2];
                     int idMascota = Integer.parseInt(datos[1]);
-                    Servicio servicio = null;
+                    Servicio servicio;
 
                     switch (tipoServicio) {
                         case "Cirugia":
-                            // ejemplo de campos: precio, nombre, bloques, requiereAnestesia
+                            // ejemplo de campos: precio, nombre, requiereAnestesia
                             double precioC = Double.parseDouble(datos[3]);
                             String nombreC = datos[4];
-                            int bloquesC = Integer.parseInt(datos[5]);
-                            boolean anestesia = Boolean.parseBoolean(datos[6]);
-                            servicio = new Cirugia(precioC, nombreC, bloquesC, anestesia);
+                            boolean anestesia = Boolean.parseBoolean(datos[5]);
+                            servicio = new Cirugia(precioC, nombreC, anestesia);
                             break;
                         case "Paseo":
                             double precioP = Double.parseDouble(datos[3]);
                             String nombreP = datos[4];
-                            int bloquesP = Integer.parseInt(datos[5]);
-                            boolean individual = Boolean.parseBoolean(datos[6]);
-                            servicio = new Paseo(precioP, nombreP, bloquesP, individual);
+                            boolean individual = Boolean.parseBoolean(datos[5]);
+                            servicio = new Paseo(precioP, nombreP, individual);
                             break;
                         case "Veterinaria":
                             double precioV = Double.parseDouble(datos[3]);
                             String nombreV = datos[4];
-                            int bloquesV = Integer.parseInt(datos[5]);
-                            boolean urgencia = Boolean.parseBoolean(datos[6]);
-                            servicio = new Veterinaria(precioV, nombreV, bloquesV, urgencia);
+                            boolean urgencia = Boolean.parseBoolean(datos[5]);
+                            servicio = new Veterinaria(precioV, nombreV, urgencia);
                             break;
                         case "Peluqueria":
                             double precioPel = Double.parseDouble(datos[3]);
                             String nombrePel = datos[4];
-                            int bloquesPel = Integer.parseInt(datos[5]);
-                            boolean corte = Boolean.parseBoolean(datos[6]);
-                            servicio = new Peluqueria(precioPel, nombrePel, bloquesPel, corte);
+                            boolean corte = Boolean.parseBoolean(datos[5]);
+                            servicio = new Peluqueria(precioPel, nombrePel, corte);
                             break;
                         default:
                             System.out.println("Servicio no reconocido: " + tipoServicio);
@@ -354,8 +272,9 @@ public class Turno {
                         String fecha = datos[7];
                         String horaInicio = datos[8];
                         String horaFin = datos[9];
+                        String precioTotal = datos[9];
 
-                        Turno t = new Turno(idMascota, servicio, fecha, horaInicio, horaFin);
+                        Turno t = new Turno(idMascota, servicio, fecha, horaInicio, horaFin, Double.parseDouble(precioTotal));
                         t.setIdTurno(Integer.parseInt(datos[0]));
                         turnos.add(t);
                 }
@@ -438,61 +357,37 @@ public class Turno {
 
                     if (id == idTurno) {
                         // Solicitar nuevos datos
-                        System.out.println("Ingrese el nuevo ID de la mascota:");
-                        int idMascota = Integer.parseInt(scanner.nextLine());
 
-                        System.out.println("Ingrese el tipo de servicio (Cirugia, Paseo, Veterinaria, Peluqueria):");
-                        String tipo = scanner.nextLine();
+                        int idMascota = Integer.parseInt(datos[1]);
 
-                        System.out.println("Ingrese el precio del servicio:");
-                        double precio = Double.parseDouble(scanner.nextLine());
+                        servicio = elegirServicio(scanner);
 
-                        System.out.println("Ingrese el nombre del servicio:");
-                        String nombre = scanner.nextLine();
-
-                        System.out.println("Ingrese los bloques del servicio:");
-                        int bloques = Integer.parseInt(scanner.nextLine());
-
-                        boolean extraFlag = false;
-
-                        switch (tipo) {
-                            case "Cirugia":
-                                System.out.println("¿Requiere anestesia? (true/false):");
-                                extraFlag = Boolean.parseBoolean(scanner.nextLine());
-                                break;
-                            case "Paseo":
-                                System.out.println("¿Es paseo individual? (true/false):");
-                                extraFlag = Boolean.parseBoolean(scanner.nextLine());
-                                break;
-                            case "Veterinaria":
-                                System.out.println("¿Es una urgencia? (true/false):");
-                                extraFlag = Boolean.parseBoolean(scanner.nextLine());
-                                break;
-                            case "Peluqueria":
-                                System.out.println("¿Incluye corte? (true/false):");
-                                extraFlag = Boolean.parseBoolean(scanner.nextLine());
-                                break;
-                            default:
-                                System.out.println("Tipo de servicio inválido.");
-                                writer.write(linea);
-                                writer.newLine();
-                                continue;
-                        }
-
-                        System.out.println("Ingrese la nueva fecha (yyyy-mm-dd):");
+                        System.out.print("Ingrese nueva fecha (dd/MM/yyyy): ");
                         String fecha = scanner.nextLine();
+                        scanner.nextLine();
 
-                        System.out.println("Ingrese la hora de inicio:");
+                        System.out.print("Ingrese nuevo horario de inicio (hh:mm): ");
                         String horaInicio = scanner.nextLine();
-
-                        System.out.println("Ingrese la hora de fin:");
+                        scanner.nextLine();
+                        System.out.print("Ingrese nuevo horario de fin (hh:mm): ");
                         String horaFin = scanner.nextLine();
+                        scanner.nextLine();
 
-                        String nuevaLinea = id + "," + idMascota + "," + tipo + "," + precio + "," + nombre + "," +
-                                bloques + "," + extraFlag + "," + fecha + "," + horaInicio + "," + horaFin;
+                        double precioTotal = 0;
 
-                        writer.write(nuevaLinea);
-                        writer.newLine();
+                        Turno turno = new Turno(idMascota, servicio, fecha, horaInicio, horaFin, precioTotal);
+
+                        // Calcula al precio total y setea al precio del turno antes de agregarlo al archivo
+                        double precioTotalCalculado = servicio.calcularCosto(turno);
+                        turno.setPrecioTotal(precioTotalCalculado);
+
+                        writer.write(id + "," +
+                                turno.idMascota + "," +
+                                turno.servicio.toCSV() + "," +
+                                turno.fecha + "," +
+                                turno.horaInicio + "," +
+                                turno.horaFin + "\n"
+                        );
                         actualizado = true;
                     } else {
                         writer.write(linea);
@@ -516,12 +411,6 @@ public class Turno {
             tempFile.delete();
         }
 
-        return false;
-    }
-
-
-    public boolean verificarDisponibilidad(String fecha, String horaInicio, String horaFin){
-        // completar
         return false;
     }
 
@@ -558,6 +447,7 @@ public class Turno {
                 ", fecha='" + fecha + '\'' +
                 ", horaInicio='" + horaInicio + '\'' +
                 ", horaFin='" + horaFin + '\'' +
+                ", precioTotal='" + precioTotal + '\'' +
                 '}';
     }
 }

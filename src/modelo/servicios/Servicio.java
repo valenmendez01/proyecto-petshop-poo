@@ -4,13 +4,11 @@ import modelo.agenda.Turno;
 
 public abstract class Servicio {
     protected String nombre;
-    protected double precioBloque;
-    protected int cantidadBloques;
+    protected double precio;
 
-    public Servicio(double precioBloque, String nombre, int cantidadBloques) {
-        this.precioBloque = precioBloque;
+    public Servicio(double precio, String nombre) {
+        this.precio = precio;
         this.nombre = nombre;
-        this.cantidadBloques = cantidadBloques;
     }
 
     public String getNombre() {
@@ -21,20 +19,12 @@ public abstract class Servicio {
         this.nombre = nombre;
     }
 
-    public double getPrecioBloque() {
-        return precioBloque;
+    public double getPrecio() {
+        return precio;
     }
 
-    public void setPrecioBloque(double precioBloque) {
-        this.precioBloque = precioBloque;
-    }
-
-    public int getCantidadBloques() {
-        return cantidadBloques;
-    }
-
-    public void setCantidadBloques(int cantidadBloques) {
-        this.cantidadBloques = cantidadBloques;
+    public void setPrecio(double precio) {
+        this.precio = precio;
     }
 
     public abstract double calcularCosto(Turno turno);

@@ -242,8 +242,8 @@ public class SistemaPetShop {
         do {
             System.out.println("1. Crear nueva cita");
             System.out.println("2. Modificar cita existente");
-            System.out.println("3. Cancelar cita");
-            System.out.println("4. Listar citas");
+            System.out.println("3. Eliminar cita");
+            System.out.println("4. Listar todas las citas");
             System.out.println("----------------------");
             System.out.println("5. Volver atrás");
 

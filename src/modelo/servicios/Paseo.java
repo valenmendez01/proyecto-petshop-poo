@@ -5,8 +5,8 @@ import modelo.agenda.Turno;
 public class Paseo extends Servicio {
     private boolean individual;
 
-    public Paseo(double precioBloque, String nombre, int cantidadBloques, boolean individual) {
-        super(precioBloque, nombre, cantidadBloques);
+    public Paseo(double precioBloque, String nombre, boolean individual) {
+        super(precioBloque, nombre);
         this.individual = individual;
     }
 
@@ -20,26 +20,28 @@ public class Paseo extends Servicio {
 
     public double calcularCosto(Turno turno){
 
+        double costoTotal = this.precio;
+
         String especie = "gato"; // turno.getMascota().getEspecie();
 
         if (especie.equals("gato")) {
-            precioBloque += 1000;
+            precio += 1000;
             System.out.println("Extra de $1000 por especie gato aplicado por bloque");
         } else if (especie.equals("perro")) {
-            precioBloque += 500;
+            precio += 500;
             System.out.println("Extra de $500 por especie perro aplicado por bloque");
         }
 
         if (individual){
-            precioBloque += 2000;
+            precio += 2000;
             System.out.println("Extra de $2000 por servicio individual de paseo aplicado por bloque");
         }
 
-        return precioBloque * cantidadBloques;
+        return costoTotal;
     };
 
     @Override
     public String toCSV() {
-        return "Paseo," + precioBloque + "," + nombre + "," + cantidadBloques + "," + individual;
+        return "Paseo," + precio + "," + nombre + "," + individual;
     }
 }

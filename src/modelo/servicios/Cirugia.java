@@ -5,8 +5,8 @@ import modelo.agenda.Turno;
 public class Cirugia extends Servicio {
     private boolean requiereAnestesia;
 
-    public Cirugia(double precioBloque, String nombre, int cantidadBloques, boolean requiereAnestesia) {
-        super(precioBloque, nombre, cantidadBloques);
+    public Cirugia(double precioBloque, String nombre, boolean requiereAnestesia) {
+        super(precioBloque, nombre);
         this.requiereAnestesia = requiereAnestesia;
     }
 
@@ -20,27 +20,29 @@ public class Cirugia extends Servicio {
 
     public double calcularCosto(Turno turno){
 
+        double costoTotal = this.precio;
+
         String especie = "gato"; // turno.getMascota().getEspecie();
 
         if (especie.equals("gato")) {
-            precioBloque += 1000;
+            precio += 1000;
             System.out.println("Extra de $1000 por especie gato aplicado por bloque");
         } else if (especie.equals("perro")) {
-            precioBloque += 500;
+            precio += 500;
             System.out.println("Extra de $500 por especie perro aplicado por bloque");
         }
 
         if (requiereAnestesia){
-            precioBloque += 2000;
+            precio += 2000;
             System.out.println("Extra de $2000 por servicio de anestesia aplicado por bloque");
         }
 
-        return precioBloque * cantidadBloques;
+        return costoTotal;
     };
 
     @Override
     public String toCSV() {
-        return "Cirugia," + precioBloque + "," + nombre + "," + cantidadBloques + "," + requiereAnestesia;
+        return "Cirugia," + precio + "," + nombre + "," + requiereAnestesia;
     }
 
 }
