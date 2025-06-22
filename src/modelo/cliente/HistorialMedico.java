@@ -97,6 +97,36 @@ public class HistorialMedico {
         this.peso = peso;
     }
 
+    // Obtener todos los historiales médicos del archivo
+    public static List<HistorialMedico> obtenerHistorialesArchivo() {
+        List<HistorialMedico> historiales = new ArrayList<HistorialMedico>();
+        File archivo = new File("src/datos/historiales_medicos.txt");
+
+        // Si el archivo no existe, devolver lista vacía
+        if (!archivo.exists()) {
+            return historiales;
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
+            String linea;
+
+            while ((linea = reader.readLine()) != null) {
+                String[] datos = linea.split(",");
+                if (datos.length == 8) {
+                    HistorialMedico h = new HistorialMedico(Integer.parseInt(datos[1]), datos[2], datos[3], datos[4], datos[5], datos[6], Double.parseDouble(datos[7]));
+                    int id = Integer.parseInt(datos[0]);
+                    h.setIdHistorial(id);
+                    historiales.add(h);
+                }
+            }
+
+        } catch (IOException | NumberFormatException e) {
+            System.out.println("Error al leer historiales: " + e.getMessage());
+        }
+
+        return historiales;
+    }
+
     // Agregar un historial médico nuevo
     public static void agregarHistorialArchivo(Scanner scanner) {
         System.out.print("Ingrese el id de la mascota asociado al historial a agregar: ");

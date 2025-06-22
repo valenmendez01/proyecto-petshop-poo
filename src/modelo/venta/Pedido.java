@@ -1,11 +1,11 @@
 package modelo.venta;
 
-import dataBase.dataBaseProductos;
 import modelo.producto.Producto;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Pedido {
     private String idProveedor;
@@ -14,154 +14,169 @@ public class Pedido {
     private String contacto;
     private List<ItemPedido> listadoPedidos;
 
-    public Pedido(String idProveedor, String nombre, String direccion, String contacto, List<ItemPedido> listadoPedidos) {
+    public Pedido(String idProveedor, String nombre, String direccion, String contacto) {
         this.idProveedor = idProveedor;
         this.nombre = nombre;
         this.direccion = direccion;
         this.contacto = contacto;
-        this.listadoPedidos = listadoPedidos;
+        this.listadoPedidos = new ArrayList<>();
     }
+
+
     public String getIdProveedor() {
         return idProveedor;
     }
+
     public void setIdProveedor(String idProveedor) {
         this.idProveedor = idProveedor;
     }
+
     public String getNombre() {
         return nombre;
     }
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
     public String getDireccion() {
         return direccion;
     }
+
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
+
     public String getContacto() {
         return contacto;
     }
+
     public void setContacto(String contacto) {
         this.contacto = contacto;
     }
-    public void realizarPedido(String id, Producto producto, int cantidad, double costoTotal) {
-        var PedidoProveedor = new ItemPedido(id, producto, cantidad, costoTotal);
-        listadoPedidos.add(PedidoProveedor);
-        producto.anadirStock(cantidad);
-    }
-    public List<ItemPedido> getListadoPedidos() {
-        return listadoPedidos;
-    }
-    public void setListadoPedidos(List<ItemPedido> listadoPedidos) {
-        this.listadoPedidos = listadoPedidos;
-    }
-    public void verPedidos() {
-        listadoPedidos.forEach(pedidoProveedor -> {
-            pedidoProveedor.mostrar();
-        });
-    }
-    public ItemPedido ObtenerPedido(String id) {
-        return this.listadoPedidos.stream()
-                .filter(pedidoProveedor -> pedidoProveedor.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-    }
-    public static void guardarPedidoArchivo(Pedido pedido) {
-        String archivo = "src/datos/pedido.txt";
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivo, true))) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(pedido.getIdProveedor()).append(";")
-                    .append(pedido.getNombre()).append(";")
-                    .append(pedido.getDireccion()).append(";")
-                    .append(pedido.getContacto()).append(";");
+    public static void crearPedido() {
+        Scanner scanner = new Scanner(System.in);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/datos/pedidos.txt", true))) {
+            System.out.print("ID del proveedor: ");
+            String id = scanner.nextLine();
+            System.out.print("Nombre del proveedor: ");
+            String nombre = scanner.nextLine();
+            System.out.print("Dirección: ");
+            String direccion = scanner.nextLine();
+            System.out.print("Contacto: ");
+            String contacto = scanner.nextLine();
 
-            for (ItemPedido item : pedido.getListadoPedidos()) {
-                sb.append(item.getId()).append(",")
-                        .append(item.getProducto().getIdProducto()).append(",")
-                        .append(item.getCantidad()).append(",")
-                        .append(item.getCostoTotal()).append("|");
-            }
-
-            if (!pedido.getListadoPedidos().isEmpty()) {
-                sb.setLength(sb.length() - 1); // Eliminar último '|'
-            }
-
-            writer.write(sb.toString());
+            writer.write(id + ";" + nombre + ";" + direccion + ";" + contacto + ";[]");
             writer.newLine();
-
+            System.out.println("Pedido creado correctamente.");
         } catch (IOException e) {
-            System.out.println("Error al guardar el pedido: " + e.getMessage());
+            System.out.println("Error al guardar pedido: " + e.getMessage());
         }
     }
-    public static List<Pedido> obtenerPedidoArchivo() {
-        List<Pedido> pedidos = new ArrayList<>();
-        File archivo = new File("src/datos/pedido.txt");
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
+    public static void agregarProductoAPedido() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Ingrese el ID del pedido: ");
+        String idPedido = scanner.nextLine();
+        System.out.print("ID del producto: ");
+        String idProducto = scanner.nextLine();
+        System.out.print("Cantidad: ");
+        int cantidad = Integer.parseInt(scanner.nextLine());
+
+        List<String> lineas = new ArrayList<>();
+        boolean encontrado = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/datos/pedidos.txt"))) {
             String linea;
+            while ((linea = reader.readLine()) != null) {
+                String[] partes = linea.split(";");
+                if (partes[0].equals(idPedido)) {
+                    encontrado = true;
+                    Producto producto = Producto.buscarProductoPorId(idProducto);
+                    if (producto == null) {
+                        System.out.println("Producto no encontrado.");
+                        return;
+                    }
 
-            // Cargar todos los productos una vez
-            List<Producto> productos = dataBaseProductos.obtenerProductos();
+                    String nuevosItems = partes.length >= 5 ? partes[4].replace("]", "") : "";
+                    nuevosItems += idProducto + "," + cantidad + "," + (producto.getPrecio() * cantidad) + ",";
+                    linea = partes[0] + ";" + partes[1] + ";" + partes[2] + ";" + partes[3] + ";" + nuevosItems + "]";
+                }
+                lineas.add(linea);
+            }
+        } catch (IOException e) {
+            System.out.println("Error al leer pedidos: " + e.getMessage());
+            return;
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/datos/pedidos.txt"))) {
+            for (String l : lineas) {
+                writer.write(l);
+                writer.newLine();
+            }
+            if (encontrado) System.out.println("Producto agregado al pedido.");
+            else System.out.println("Pedido no encontrado.");
+        } catch (IOException e) {
+            System.out.println("Error al guardar pedido: " + e.getMessage());
+        }
+    }
+
+    public static void eliminarPedido() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Ingrese ID del pedido a eliminar: ");
+        String idEliminar = scanner.nextLine();
+
+        File inputFile = new File("src/datos/pedidos.txt");
+        File tempFile = new File("src/datos/pedidos_temp.txt");
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+
+            String linea;
+            boolean encontrado = false;
 
             while ((linea = reader.readLine()) != null) {
-                String[] partes = linea.split(";", 5);  // Dividimos en 5 partes (los primeros 4 son fijos)
-
-                if (partes.length < 5) continue;
-
-                String idProveedor = partes[0];
-                String nombre = partes[1];
-                String direccion = partes[2];
-                String contacto = partes[3];
-                String itemsTexto = partes[4];
-
-                List<ItemPedido> items = new ArrayList<>();
-
-                for (String itemStr : itemsTexto.split("\\|")) {
-                    String[] itemPartes = itemStr.split(",");
-
-                    if (itemPartes.length < 4) continue;
-
-                    String idItem = itemPartes[0];
-                    String idProducto = itemPartes[1];
-                    int cantidad = Integer.parseInt(itemPartes[2]);
-                    double costoTotal = Double.parseDouble(itemPartes[3]);
-
-                    // Buscar el producto por ID
-                    Producto producto = null;
-                    for (Producto p : productos) {
-                        if (p.getIdProducto()==Integer.parseInt(idProducto)) {
-                            producto = p;
-                            break;
-                        }
-                    }
-
-                    if (producto != null) {
-                        ItemPedido item = new ItemPedido(idItem, producto, cantidad, costoTotal);
-                        items.add(item);
-                    }
+                String[] datos = linea.split(";");
+                if (!datos[0].equals(idEliminar)) {
+                    writer.write(linea);
+                    writer.newLine();
+                } else {
+                    encontrado = true;
                 }
+            }
 
-                Pedido pedido = new Pedido(idProveedor, nombre, direccion, contacto, items);
-                pedidos.add(pedido);
+            if (inputFile.delete() && tempFile.renameTo(inputFile)) {
+                if (encontrado)
+                    System.out.println("Pedido eliminado.");
+                else
+                    System.out.println("Pedido no encontrado.");
+            } else {
+                System.out.println("Error al actualizar el archivo.");
             }
 
         } catch (IOException e) {
-            System.out.println("Error al leer el archivo de pedidos: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
-
-        return pedidos;
     }
 
-    public double calcularTotalPedido() {
-        double total = 0.0;
-        for (ItemPedido item : listadoPedidos) {
-            total += item.getCostoTotal();
+    public static void verPedidos() {
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/datos/pedidos.txt"))) {
+            String linea;
+            while ((linea = reader.readLine()) != null) {
+                String[] partes = linea.split(";");
+                System.out.println("ID: " + partes[0] + " | Nombre: " + partes[1] +
+                        " | Dirección: " + partes[2] + " | Contacto: " + partes[3]);
+                if (partes.length > 4 && !partes[4].equals("[]")) {
+                    System.out.println("   Productos:");
+                    String[] items = partes[4].replace("]", "").split(",");
+                    for (int i = 0; i < items.length - 2; i += 3) {
+                        System.out.println("   - ID: " + items[i] + ", Cantidad: " + items[i + 1] + ", Total: $" + items[i + 2]);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error al leer pedidos: " + e.getMessage());
         }
-        return total;
     }
-
-
 }
-

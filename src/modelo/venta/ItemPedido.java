@@ -1,24 +1,37 @@
 package modelo.venta;
 
-import modelo.producto.Producto;
-
 public class ItemPedido {
-    private String id;
-    private Producto producto;
+    private String idProducto;
+    private String nombreProducto;
+    private double precioUnitario;
     private int cantidad;
     private double costoTotal;
 
-    public ItemPedido(String id, Producto producto, int cantidad, double costoTotal) {
-        this.id = id;
-        this.producto = producto;
+    public ItemPedido(String idProducto, String nombreProducto, double precioUnitario, int cantidad) {
+        this.idProducto = idProducto;
+        this.nombreProducto = nombreProducto;
+        this.precioUnitario = precioUnitario;
         this.cantidad = cantidad;
-        this.costoTotal = costoTotal;
+        this.costoTotal = precioUnitario * cantidad;
     }
-    public Producto getProducto() {
-        return producto;
+
+    public String getIdProducto() {
+        return idProducto;
     }
-    public void setProducto(Producto producto) {
-        this.producto = producto;
+    public void setIdProducto(String idProducto) {
+        this.idProducto = idProducto;
+    }
+    public String getNombreProducto() {
+        return nombreProducto;
+    }
+    public void setNombreProducto(String nombreProducto) {
+        this.nombreProducto = nombreProducto;
+    }
+    public double getPrecioUnitario() {
+        return precioUnitario;
+    }
+    public void setPrecioUnitario(double precioUnitario) {
+        this.precioUnitario = precioUnitario;
     }
     public int getCantidad() {
         return cantidad;
@@ -32,18 +45,8 @@ public class ItemPedido {
     public void setCostoTotal(double costoTotal) {
         this.costoTotal = costoTotal;
     }
-    public void mostrar() {
-        System.out.println("Producto: " + producto.getIdProducto());
-        System.out.println("Cantidad: " + cantidad);
-        System.out.println("Costo: " + costoTotal);
-    }
 
-    public String getId() {
-        return id;
+    public String toDataString() {
+        return idProducto + "," + nombreProducto + "," + precioUnitario + "," + cantidad + "," + costoTotal;
     }
-    public void setId(String id) {
-        this.id = id;
-    }
-
-
 }

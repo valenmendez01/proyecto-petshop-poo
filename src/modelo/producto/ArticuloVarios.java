@@ -5,19 +5,13 @@ public class ArticuloVarios extends Producto {
     private String marca;
     private String material;
 
-    public ArticuloVarios(String nombre, double precio, int stock, String descripcion, String categoria, String marca, String material) {
-        super(nombre, precio, stock, descripcion);
-        this.categoria = categoria;
+    public ArticuloVarios(int idProducto, String nombre, double precio, int stock, String marca, String categoria, String material) {
+        super(idProducto, nombre, precio, stock, "ArticuloVarios");
         this.marca = marca;
+        this.categoria = categoria;
         this.material = material;
     }
 
-    public ArticuloVarios(int idProducto, String nombre, double precio, int stock, String descripcion, String categoria, String marca, String material) {
-        super(idProducto, nombre, precio, stock, descripcion);
-        this.categoria = categoria;
-        this.marca = marca;
-        this.material = material;
-    }
 
     public String getCategoria() {
         return categoria;
@@ -42,8 +36,13 @@ public class ArticuloVarios extends Producto {
     public String getProductDescription() {
         return "ID: " + getIdProducto() + "\n"
                 + "Nombre: " + getNombre() + "\n"
-                + "Descripción: " + getDescripcion() + "\n"
+                + "Descripción: " + getTipo() + "\n"
                 + "Precio: $" + getPrecio() + "\n"
                 + "Stock: " + getStock();
     }
+    @Override
+    public String toDataString() {
+        return super.toDataString() + ";ArticuloVarios;" + marca + ";" + categoria + ";" + material;
+    }
+
 }

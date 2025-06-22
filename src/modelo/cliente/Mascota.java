@@ -352,7 +352,7 @@ public class Mascota {
 
     // Obtener mascotas por cliente específico
     public static List<Mascota> obtenerMascotasPorCliente(Scanner scanner) {
-        System.out.print("Ingrese el id del cliente: ");
+        System.out.println("Ingrese el id del cliente: ");
         int idCliente = scanner.nextInt();
 
         List<Mascota> mascotas = new ArrayList<Mascota>();

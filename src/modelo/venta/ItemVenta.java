@@ -42,4 +42,8 @@ public class ItemVenta {
         subtotal = cantidad * precioUnitario;
         return subtotal;
     }
+    public String toDataString() {
+        return producto.getIdProducto() + "," + cantidad + "," + precioUnitario + "," + subtotal;
+    }
+
 }

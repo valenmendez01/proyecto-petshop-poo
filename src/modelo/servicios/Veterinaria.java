@@ -19,26 +19,26 @@ public class Veterinaria extends Servicio {
     }
 
     @Override
-    public void calcularCosto(Turno turno, String especie){
+    public double calcularCosto(Turno turno){
 
         double costoTotal = this.precio;
 
+        String especie = "gato"; // turno.getMascota().getEspecie();
+
         if (especie.equals("gato")) {
             precio += 1000;
-            System.out.println("Extra de $1000 por especie gato aplicado");
+            System.out.println("Extra de $1000 por especie gato aplicado por bloque");
         } else if (especie.equals("perro")) {
             precio += 500;
-            System.out.println("Extra de $500 por especie perro aplicado");
+            System.out.println("Extra de $500 por especie perro aplicado por bloque");
         }
 
         if (esUrgencia){
             precio += 2000;
-            System.out.println("Extra de $2000 por servicio de urgencia aplicado");
+            System.out.println("Extra de $2000 por servicio de urgencia aplicado por bloque");
         }
 
-        System.out.println("Costo total de la cita: " + costoTotal);
-
-        turno.setPrecioTotal(costoTotal);
+        return costoTotal;
     };
 
     @Override

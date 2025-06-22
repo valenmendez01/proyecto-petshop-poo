@@ -1,1 +1,3 @@
-1;can;10.0;1;hola;hola;hola;hola;
+
+111;comida gato adulto;15.0;110;AlimentoMascota;gato;adulto;carne vacuna
+222;pelota;5.0;50;ArticuloVarios;pelotas;juguetes;plastico
