@@ -229,6 +229,9 @@ public class SistemaPetShop {
                         }
                     }
                     break;
+                case 13:
+                    System.out.println("Volviendo al menú anterior...");
+                    break;
                 default:
                     System.out.println("Opción inválida. Intente nuevamente.");
             }
@@ -274,15 +277,11 @@ public class SistemaPetShop {
                     }
                     break;
                 case 4:
-                    List<Turno> turnos = Turno.obtenerTurnosArchivo();
-
-                    if (turnos.isEmpty()) {
-                        System.out.println("No hay turnos registrados.");
-                    } else {
-                        for (Turno t : turnos) {
-                            System.out.println(t.toString());
-                        }
-                    }
+                    Turno.obtenerTurnosArchivo();
+                    System.out.println("----------------------");
+                    break;
+                case 5:
+                    System.out.println("Volviendo al menú anterior...");
                     break;
                 default:
                     System.out.println("Opción inválida. Intente nuevamente.");

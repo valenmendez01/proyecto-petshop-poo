@@ -27,7 +27,7 @@ public abstract class Servicio {
         this.precio = precio;
     }
 
-    public abstract double calcularCosto(Turno turno);
+    public abstract void calcularCosto(Turno turno, String especie);
 
     public abstract String toCSV();
 
