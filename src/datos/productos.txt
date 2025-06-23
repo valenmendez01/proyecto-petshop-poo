@@ -1,3 +1,4 @@
 
 111;comida gato adulto;15.0;110;AlimentoMascota;gato;adulto;carne vacuna
 222;pelota;5.0;50;ArticuloVarios;pelotas;juguetes;plastico
+666;golosina;4.0;100;AlimentoMascota;gato;todas;pescado

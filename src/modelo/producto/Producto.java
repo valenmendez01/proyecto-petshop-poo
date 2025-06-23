@@ -5,11 +5,11 @@ import java.io.*;
 import java.util.Scanner;
 
 public abstract class Producto {
-    private int idProducto;
-    private String nombre;
-    private double precio;
-    private int stock;
-    private String tipo;
+    protected int idProducto;
+    protected String nombre;
+    protected double precio;
+    protected int stock;
+    protected String tipo;
 
     public Producto(int idProducto, String nombre, double precio, int stock, String tipo) {
         this.idProducto = idProducto;
@@ -45,11 +45,6 @@ public abstract class Producto {
     }
     public void setTipo(String tipo) {
         this.tipo = tipo;
-    }
-
-    @Override
-    public String toString() {
-        return idProducto + ";" + nombre + ";" + precio + ";" + stock + ";" + tipo;
     }
 
     public String toDataString() {
