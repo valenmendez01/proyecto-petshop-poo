@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Pedido {
-    private String idProveedor;
+    private String idPedido;
     private String nombre;
     private String direccion;
     private String contacto;
     private List<ItemPedido> listadoPedidos;
 
     public Pedido(String idProveedor, String nombre, String direccion, String contacto) {
-        this.idProveedor = idProveedor;
+        this.idPedido = idProveedor;
         this.nombre = nombre;
         this.direccion = direccion;
         this.contacto = contacto;
@@ -23,12 +23,12 @@ public class Pedido {
     }
 
 
-    public String getIdProveedor() {
-        return idProveedor;
+    public String getIdPedido() {
+        return idPedido;
     }
 
-    public void setIdProveedor(String idProveedor) {
-        this.idProveedor = idProveedor;
+    public void setIdPedido(String idPedido) {
+        this.idPedido = idPedido;
     }
 
     public String getNombre() {
