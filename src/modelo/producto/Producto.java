@@ -200,11 +200,11 @@ public abstract class Producto {
                 String tipo = partes[4];
 
                 if (tipo.equals("ArticuloVarios")) {
-                    System.out.println("🛠 ID: " + partes[0] + " | Nombre: " + partes[1] + " | Precio: $" + partes[2] +
+                    System.out.println("ID: " + partes[0] + " | Nombre: " + partes[1] + " | Precio: $" + partes[2] +
                             " | Stock: " + partes[3] + " | Tipo: Artículo Varios | Marca: " + partes[5] +
                             " | Categoría: " + partes[6] + " | Material: " + partes[7]);
                 } else if (tipo.equals("AlimentoMascota")) {
-                    System.out.println("🐾 ID: " + partes[0] + " | Nombre: " + partes[1] + " | Precio: $" + partes[2] +
+                    System.out.println("ID: " + partes[0] + " | Nombre: " + partes[1] + " | Precio: $" + partes[2] +
                             " | Stock: " + partes[3] + " | Tipo: Alimento Mascota | Especie: " + partes[5] +
                             " | Etapa: " + partes[6] + " | Info Nutricional: " + partes[7]);
                 }

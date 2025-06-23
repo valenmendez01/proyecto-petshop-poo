@@ -17,7 +17,9 @@ import java.util.List;
 
 public class SistemaPetShop {
     public static void main(String[] args) {
+        // Crea ventana principal
         JFrame marco = new JFrame("Menu");
+
         // Panel superior con el título
         JLabel titulo = new JLabel("SISTEMA DE GESTIÓN DEL PET SHOP", JLabel.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 18));
@@ -27,24 +29,21 @@ public class SistemaPetShop {
         JPanel panelCentral = new JPanel(new GridLayout(2, 2, 10, 10));
         panelCentral.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // espacio interior
 
+        // Botones del menu
         JButton boton1 = new JButton("1. Gestionar clientes y mascotas");
-
         JButton boton2 = new JButton("2. Gestionar citas");
-
         JButton boton3 = new JButton("3. Gestionar ventas");
-
         JButton boton4 = new JButton("4. Gestionar proveedores y pedidos");
-
         JButton boton5 = new JButton("5. Gestionar Productos");
 
-        // Asignar comandos
+        // Asignar comandos a los botones
         boton1.setActionCommand("1");
         boton2.setActionCommand("2");
         boton3.setActionCommand("3");
         boton4.setActionCommand("4");
         boton5.setActionCommand("5");
 
-        // Crear listener único para todos
+        // Crear listener para manejar eventos
         ActionListener listener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -53,18 +52,23 @@ public class SistemaPetShop {
 
                 switch (comando) {
                     case "1":
+                        // Gestion de Clientes y Mascotas e historiales
                         gestionarClientesYMascotas();
                         break;
                     case "2":
+                        // Gestion de Turnos de mascota
                         gestionarCitas();
                         break;
                     case "3":
+                        // Gestion Ventas del petshop
                         gestionarVentas();
                         break;
                     case "4":
+                        // Gestion pedidos para proveedores
                         gestionarPedidos();
                         break;
                     case "5":
+                        // Administracion de carga de productos y manejo de stock
                         gestionarProductos();
                         break;
                     default:
@@ -73,19 +77,21 @@ public class SistemaPetShop {
             }
         };
 
-        // Asignar listener
+        // Asignar listener a los botones
         boton1.addActionListener(listener);
         boton2.addActionListener(listener);
         boton3.addActionListener(listener);
         boton4.addActionListener(listener);
         boton5.addActionListener(listener);
 
+        // Agregar los botones al panel
         panelCentral.add(boton1);
         panelCentral.add(boton2);
         panelCentral.add(boton3);
         panelCentral.add(boton4);
         panelCentral.add(boton5);
 
+        // Agregar el panel central al marco
         marco.add(panelCentral, BorderLayout.CENTER);
 
         // Panel inferior con el botón salir
@@ -96,6 +102,7 @@ public class SistemaPetShop {
         panelInferior.add(botonSalir);
         marco.add(panelInferior, BorderLayout.SOUTH);
 
+        // Mostrar la ventana
         marco.pack();
         marco.setVisible(true);
         marco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
