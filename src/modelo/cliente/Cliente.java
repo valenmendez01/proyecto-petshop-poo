@@ -113,10 +113,10 @@ public class Cliente {
 
         try (FileWriter writer = new FileWriter(archivo, true)) {
             writer.write(cliente.idCliente + "," +
-                cliente.nombre + "," +
-                cliente.apellido + "," +
-                cliente.telefono + "," +
-                cliente.direccion + "\n");
+                    cliente.nombre + "," +
+                    cliente.apellido + "," +
+                    cliente.telefono + "," +
+                    cliente.direccion + "\n");
         } catch (IOException e) {
             System.out.println("Error al escribir el archivo: " + e.getMessage());
         }
@@ -224,10 +224,10 @@ public class Cliente {
                 if (datos.length == 5) {
                     if (id == Integer.parseInt(datos[0])) {
                         writer.write(id + "," +
-                            cliente.getNombre() + "," +
-                            cliente.getApellido() + "," +
-                            cliente.getTelefono() + "," +
-                            cliente.getDireccion() + "\n");
+                                cliente.getNombre() + "," +
+                                cliente.getApellido() + "," +
+                                cliente.getTelefono() + "," +
+                                cliente.getDireccion() + "\n");
                         actualizado = true;
                     } else {
                         writer.write(linea + "\n");

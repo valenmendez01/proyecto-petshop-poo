@@ -1,0 +1,2 @@
+1,1,julian,perro,bulldog,masculino,5,15.0
+2,1,lucas,gato,siames,femenino,3,44.0

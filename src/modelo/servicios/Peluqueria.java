@@ -18,26 +18,26 @@ public class Peluqueria extends Servicio {
         this.incluyeCorteUnas = incluyeCorteUnas;
     }
 
-    public double calcularCosto(Turno turno){
+    public void calcularCosto(Turno turno, String especie){
 
         double costoTotal = this.precio;
 
-        String especie = "gato"; // turno.getMascota().getEspecie();
-
         if (especie.equals("gato")) {
             precio += 1000;
-            System.out.println("Extra de $1000 por especie gato aplicado por bloque");
+            System.out.println("Extra de $1000 por especie gato aplicado");
         } else if (especie.equals("perro")) {
             precio += 500;
-            System.out.println("Extra de $500 por especie perro aplicado por bloque");
+            System.out.println("Extra de $500 por especie perro aplicado");
         }
 
         if (incluyeCorteUnas){
             precio += 2000;
-            System.out.println("Extra de $2000 por servicio de corte de uñas aplicado por bloque");
+            System.out.println("Extra de $2000 por servicio de corte de uñas aplicado");
         }
 
-        return costoTotal;
+        System.out.println("Costo total de la cita: " + costoTotal);
+
+        turno.setPrecioTotal(costoTotal);
     };
 
     @Override

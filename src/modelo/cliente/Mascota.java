@@ -321,13 +321,13 @@ public class Mascota {
                 if (datos.length == 8) {
                     if (mascotaId == Integer.parseInt(datos[0])) {
                         writer.write(mascotaId + "," +
-                            mascotaActualizar.getIdCliente() + "," +
-                            mascotaActualizar.getNombre() + "," +
-                            mascotaActualizar.getEspecie() + "," +
-                            mascotaActualizar.getRaza() + "," +
-                            mascotaActualizar.getSexo() + "," +
-                            mascotaActualizar.getEdad() + "," +
-                            mascotaActualizar.getPeso() + "\n");
+                                mascotaActualizar.getIdCliente() + "," +
+                                mascotaActualizar.getNombre() + "," +
+                                mascotaActualizar.getEspecie() + "," +
+                                mascotaActualizar.getRaza() + "," +
+                                mascotaActualizar.getSexo() + "," +
+                                mascotaActualizar.getEdad() + "," +
+                                mascotaActualizar.getPeso() + "\n");
                         actualizado = true;
                     } else {
                         writer.write(linea + "\n");
@@ -352,7 +352,7 @@ public class Mascota {
 
     // Obtener mascotas por cliente específico
     public static List<Mascota> obtenerMascotasPorCliente(Scanner scanner) {
-        System.out.println("Ingrese el id del cliente: ");
+        System.out.print("Ingrese el id del cliente: ");
         int idCliente = scanner.nextInt();
 
         List<Mascota> mascotas = new ArrayList<Mascota>();

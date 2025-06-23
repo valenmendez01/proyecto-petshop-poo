@@ -4,7 +4,6 @@ import modelo.cliente.Mascota;
 import modelo.servicios.*;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -95,40 +94,58 @@ public class Turno {
             System.out.println("Nombre: " + mascota.getNombre() + " - Id " + mascota.getIdMascota());
         }
         // indicar el idMascota a asignar turno
-        System.out.print("Ingrese el id de la mascota a asignar turno: ");
-        int idMascota = scanner.nextInt();
-        scanner.nextLine();
+        int idMascota;
+        Mascota mascotaSeleccionada = null;
 
+        while (true) {
+            System.out.print("Ingrese el id de la mascota a asignar turno: ");
+            idMascota = scanner.nextInt();
+            scanner.nextLine(); // Limpiar buffer
+
+            for (Mascota mascota : listaMascota) {
+                if (mascota.getIdMascota() == idMascota) {
+                    mascotaSeleccionada = mascota;
+                    break;
+                }
+            }
+
+            if (mascotaSeleccionada != null) {
+                break; // ID válido, salimos del bucle
+            } else {
+                System.out.println("ID inválido. Intente nuevamente.");
+            }
+        }
+        System.out.println("Mascota seleccionada: " + mascotaSeleccionada.getNombre());
+
+        String especie = mascotaSeleccionada.getEspecie(); // se envia a Servicio para calcular costos extras por especie
         servicio = elegirServicio(scanner);
 
         System.out.print("Ingrese fecha (dd/MM/yyyy): ");
         String fecha = scanner.nextLine();
-        scanner.nextLine();
 
         System.out.print("Ingrese el horario de inicio (hh:mm): ");
         String horaInicio = scanner.nextLine();
-        scanner.nextLine();
+
         System.out.print("Ingrese el horario de fin (hh:mm): ");
         String horaFin = scanner.nextLine();
-        scanner.nextLine();
+        System.out.println("---------");
 
         double precioTotal = 0;
 
         Turno turno = new Turno(idMascota, servicio, fecha, horaInicio, horaFin, precioTotal);
 
         // Calcula al precio total y setea al precio del turno antes de agregarlo al archivo
-        double precioTotalCalculado = servicio.calcularCosto(turno);
-        turno.setPrecioTotal(precioTotalCalculado);
+        servicio.calcularCosto(turno, especie);
 
         File archivo = new File("src/datos/turnos.txt");
 
         try (FileWriter writer = new FileWriter(archivo, true)) {
             writer.write(turno.idTurno + "," +
-                turno.idMascota + "," +
-                turno.servicio.toCSV() + "," +
-                turno.fecha + "," +
-                turno.horaInicio + "," +
-                turno.horaFin + "\n");
+                    turno.idMascota + "," +
+                    turno.servicio.toCSV() + "," +
+                    turno.fecha + "," +
+                    turno.horaInicio + "," +
+                    turno.horaFin + "\n");
         } catch (IOException e) {
             System.out.println("Error al escribir el archivo: " + e.getMessage());
         }
@@ -150,7 +167,7 @@ public class Turno {
         switch (opcion) {
             case 1:
                 System.out.print("Ingrese el precio: ");
-                double precioBloque = scanner.nextDouble();
+                double precio = scanner.nextDouble();
                 scanner.nextLine();
 
                 System.out.print("Ingrese el nombre del cirujano: ");
@@ -164,10 +181,10 @@ public class Turno {
                     requiereAnestesia = true;
                 }
 
-                return new Cirugia(precioBloque, nombre, requiereAnestesia);
+                return new Cirugia(precio, nombre, requiereAnestesia);
             case 2:
                 System.out.print("Ingrese el precio: ");
-                double precioBloque2 = scanner.nextDouble();
+                double precio2 = scanner.nextDouble();
                 scanner.nextLine();
 
                 System.out.print("Ingrese el nombre del paseador: ");
@@ -180,10 +197,10 @@ public class Turno {
                 if (esIndividual.equals("Y")) {
                     individual = true;
                 }
-                return new Paseo(precioBloque2, nombre2, individual);
+                return new Paseo(precio2, nombre2, individual);
             case 3:
                 System.out.print("Ingrese el precio: ");
-                double precioBloque3 = scanner.nextDouble();
+                double precio3 = scanner.nextDouble();
                 scanner.nextLine();
 
                 System.out.print("Ingrese el nombre del veterinario: ");
@@ -196,10 +213,10 @@ public class Turno {
                 if (urgencia.equals("Y")) {
                     esUrgencial = true;
                 }
-                return new Veterinaria(precioBloque3, nombre3, esUrgencial);
+                return new Veterinaria(precio3, nombre3, esUrgencial);
             case 4:
                 System.out.print("Ingrese el precio: ");
-                double precioBloque4 = scanner.nextDouble();
+                double precio4 = scanner.nextDouble();
                 scanner.nextLine();
 
                 System.out.print("Ingrese el nombre del peluquero: ");
@@ -212,7 +229,7 @@ public class Turno {
                 if (incluye.equals("Y")) {
                     incluyeCorteUnas = true;
                 }
-                return new Peluqueria(precioBloque4, nombre4, incluyeCorteUnas);
+                return new Peluqueria(precio4, nombre4, incluyeCorteUnas);
             default:
                 System.out.println("Opción inválida.");
                 return null;
@@ -220,13 +237,13 @@ public class Turno {
     }
 
     // Obtener todas los turnos del archivo
-    public static List<Turno> obtenerTurnosArchivo() {
-        List<Turno> turnos = new ArrayList<Turno>();
+    public static void obtenerTurnosArchivo() {
+
         File archivo = new File("src/datos/turnos.txt");
 
         // Si el archivo no existe, devolver lista vacía
         if (!archivo.exists()) {
-            return turnos;
+            System.out.println("No hay turnos para mostrar");
         }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
@@ -234,65 +251,36 @@ public class Turno {
 
             while ((linea = reader.readLine()) != null) {
                 String[] datos = linea.split(",");
-                if (datos.length >= 8) {
-                    String tipoServicio = datos[2];
-                    int idMascota = Integer.parseInt(datos[1]);
-                    Servicio servicio;
 
-                    switch (tipoServicio) {
-                        case "Cirugia":
-                            // ejemplo de campos: precio, nombre, requiereAnestesia
-                            double precioC = Double.parseDouble(datos[3]);
-                            String nombreC = datos[4];
-                            boolean anestesia = Boolean.parseBoolean(datos[5]);
-                            servicio = new Cirugia(precioC, nombreC, anestesia);
-                            break;
-                        case "Paseo":
-                            double precioP = Double.parseDouble(datos[3]);
-                            String nombreP = datos[4];
-                            boolean individual = Boolean.parseBoolean(datos[5]);
-                            servicio = new Paseo(precioP, nombreP, individual);
-                            break;
-                        case "Veterinaria":
-                            double precioV = Double.parseDouble(datos[3]);
-                            String nombreV = datos[4];
-                            boolean urgencia = Boolean.parseBoolean(datos[5]);
-                            servicio = new Veterinaria(precioV, nombreV, urgencia);
-                            break;
-                        case "Peluqueria":
-                            double precioPel = Double.parseDouble(datos[3]);
-                            String nombrePel = datos[4];
-                            boolean corte = Boolean.parseBoolean(datos[5]);
-                            servicio = new Peluqueria(precioPel, nombrePel, corte);
-                            break;
-                        default:
-                            System.out.println("Servicio no reconocido: " + tipoServicio);
-                            continue;
-                    }
-                        String fecha = datos[7];
-                        String horaInicio = datos[8];
-                        String horaFin = datos[9];
-                        String precioTotal = datos[9];
-
-                        Turno t = new Turno(idMascota, servicio, fecha, horaInicio, horaFin, Double.parseDouble(precioTotal));
-                        t.setIdTurno(Integer.parseInt(datos[0]));
-                        turnos.add(t);
+                String conEspecial = "No";
+                if (datos[5].equals("true")) {
+                    conEspecial = "Si";
                 }
+
+                System.out.println(
+                        "-- Turno: " +
+                                "idTurno= " + datos[0] +
+                                ", idMascota= " + datos[1] +
+                                ", Servicio= " + datos[2] +
+                                ", Precio total= " + datos[3] +
+                                ", Especialista= " + datos[4] +
+                                ", Servicio especial= " + conEspecial +
+                                ", fecha= " + datos[6] +
+                                ", horaInicio= " + datos[7] +
+                                ", horaFin= " + datos[8] +
+                                '}'
+                );
             }
 
         } catch (IOException | NumberFormatException e) {
             System.out.println("Error al leer turnos: " + e.getMessage());
         }
-
-        return turnos;
     }
 
     public static boolean eliminarTurnoArchivo(Scanner scanner) {
         System.out.print("Ingrese el id del turno a eliminar: ");
         int idTurno = scanner.nextInt();
         scanner.nextLine();
-
-        System.out.print("Turno encontrado");
 
         File inputFile = new File("src/datos/turnos.txt");
         File tempFile = new File("src/datos/turnos_temp.txt");
@@ -309,13 +297,11 @@ public class Turno {
             String linea;
             while ((linea = reader.readLine()) != null) {
                 String[] datos = linea.split(",");
-                if (datos.length >= 10) {
-                    int id = Integer.parseInt(datos[0]);
-                    if (id != idTurno) {
-                        writer.write(linea + "\n");
-                    } else {
-                        eliminado = true;
-                    }
+                int id = Integer.parseInt(datos[0]);
+                if (id != idTurno) {
+                    writer.write(linea + "\n");
+                } else {
+                    eliminado = true;
                 }
             }
 
@@ -352,47 +338,44 @@ public class Turno {
             while ((linea = reader.readLine()) != null) {
                 String[] datos = linea.split(",");
 
-                if (datos.length >= 10) {
-                    int id = Integer.parseInt(datos[0]);
+                int id = Integer.parseInt(datos[0]);
 
-                    if (id == idTurno) {
-                        // Solicitar nuevos datos
+                if (id == idTurno) {
+                    // Solicitar nuevos datos
 
-                        int idMascota = Integer.parseInt(datos[1]);
+                    int idMascota = Integer.parseInt(datos[1]);
 
-                        servicio = elegirServicio(scanner);
+                    String especie = obtenerEspeciePorIdMascota(idMascota);
 
-                        System.out.print("Ingrese nueva fecha (dd/MM/yyyy): ");
-                        String fecha = scanner.nextLine();
-                        scanner.nextLine();
+                    servicio = elegirServicio(scanner);
 
-                        System.out.print("Ingrese nuevo horario de inicio (hh:mm): ");
-                        String horaInicio = scanner.nextLine();
-                        scanner.nextLine();
-                        System.out.print("Ingrese nuevo horario de fin (hh:mm): ");
-                        String horaFin = scanner.nextLine();
-                        scanner.nextLine();
+                    System.out.print("Ingrese nueva fecha (dd/MM/yyyy): ");
+                    String fecha = scanner.nextLine();
 
-                        double precioTotal = 0;
+                    System.out.print("Ingrese nuevo horario de inicio (hh:mm): ");
+                    String horaInicio = scanner.nextLine();
 
-                        Turno turno = new Turno(idMascota, servicio, fecha, horaInicio, horaFin, precioTotal);
+                    System.out.print("Ingrese nuevo horario de fin (hh:mm): ");
+                    String horaFin = scanner.nextLine();
 
-                        // Calcula al precio total y setea al precio del turno antes de agregarlo al archivo
-                        double precioTotalCalculado = servicio.calcularCosto(turno);
-                        turno.setPrecioTotal(precioTotalCalculado);
+                    double precioTotal = 0;
 
-                        writer.write(id + "," +
-                                turno.idMascota + "," +
-                                turno.servicio.toCSV() + "," +
-                                turno.fecha + "," +
-                                turno.horaInicio + "," +
-                                turno.horaFin + "\n"
-                        );
-                        actualizado = true;
-                    } else {
-                        writer.write(linea);
-                        writer.newLine();
-                    }
+                    Turno turno = new Turno(idMascota, servicio, fecha, horaInicio, horaFin, precioTotal);
+
+                    // Calcula al precio total y setea al precio del turno antes de agregarlo al archivo
+                    servicio.calcularCosto(turno, especie);
+
+                    writer.write(id + "," +
+                            turno.idMascota + "," +
+                            turno.servicio.toCSV() + "," +
+                            turno.fecha + "," +
+                            turno.horaInicio + "," +
+                            turno.horaFin + "\n"
+                    );
+                    actualizado = true;
+                } else {
+                    writer.write(linea);
+                    writer.newLine();
                 }
             }
 
@@ -412,6 +395,28 @@ public class Turno {
         }
 
         return false;
+    }
+
+    public static String obtenerEspeciePorIdMascota(int idMascota) {
+        File archivo = new File("src/datos/mascotas.txt");
+
+        String especie = "";
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
+            String linea;
+            while ((linea = reader.readLine()) != null) {
+                String[] datos = linea.split(",");
+                int idMascotaLeida = Integer.parseInt(datos[0]);
+
+                if (idMascotaLeida == idMascota) {
+                    especie = datos[3];
+                }
+            }
+        } catch (IOException | NumberFormatException e) {
+            System.out.println("Error al leer mascotas: " + e.getMessage());
+        }
+
+        return especie;
     }
 
     public static void inicializarContadorId() {

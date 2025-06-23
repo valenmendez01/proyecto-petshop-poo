@@ -72,16 +72,16 @@ public class Venta {
     public static void crearVenta() {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("🆔 ID de la venta: ");
+        System.out.print("ID de la venta: ");
         String idVenta = scanner.nextLine();
 
-        System.out.print("👤 Nombre del cliente: ");
+        System.out.print("Nombre del cliente: ");
         String cliente = scanner.nextLine();
 
-        System.out.print("📅 Fecha de la venta (dd/mm/aaaa): ");
+        System.out.print("Fecha de la venta (dd/mm/aaaa): ");
         String fecha = scanner.nextLine();
 
-        System.out.print("💳 Método de pago: ");
+        System.out.print("Método de pago: ");
         String metodoPago = scanner.nextLine();
 
         // Se guarda una línea base con los datos de la venta y lista de items vacía
@@ -90,9 +90,9 @@ public class Venta {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/datos/ventas.txt", true))) {
             writer.write(linea);
             writer.newLine();
-            System.out.println("✅ Venta registrada correctamente.");
+            System.out.println("Venta registrada correctamente.");
         } catch (IOException e) {
-            System.out.println("❌ Error al guardar la venta: " + e.getMessage());
+            System.out.println("Error al guardar la venta: " + e.getMessage());
         }
     }
     public static void agregarProductoAVenta() {
@@ -115,7 +115,7 @@ public class Venta {
                     encontrado = true;
                     Producto producto = Producto.buscarProductoPorId(idProducto);
                     if (producto == null) {
-                        System.out.println("❌ Producto no encontrado.");
+                        System.out.println("Producto no encontrado.");
                         return;
                     }
 
@@ -126,7 +126,7 @@ public class Venta {
                 lineas.add(linea);
             }
         } catch (IOException e) {
-            System.out.println("❌ Error al leer ventas: " + e.getMessage());
+            System.out.println("Error al leer ventas: " + e.getMessage());
             return;
         }
 
@@ -135,15 +135,15 @@ public class Venta {
                 writer.write(l);
                 writer.newLine();
             }
-            if (encontrado) System.out.println("✅ Producto agregado a la venta.");
-            else System.out.println("⚠️ Venta no encontrada.");
+            if (encontrado) System.out.println("Producto agregado a la venta.");
+            else System.out.println("Venta no encontrada.");
         } catch (IOException e) {
-            System.out.println("❌ Error al guardar venta: " + e.getMessage());
+            System.out.println("Error al guardar venta: " + e.getMessage());
         }
     }
     public static void eliminarVenta() {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("🗑️ Ingrese el ID de la venta a eliminar: ");
+        System.out.print("Ingrese el ID de la venta a eliminar: ");
         String idEliminar = scanner.nextLine();
 
         File archivoOriginal = new File("src/datos/ventas.txt");
@@ -166,18 +166,18 @@ public class Venta {
                 }
             }
         } catch (IOException e) {
-            System.out.println("❌ Error al procesar el archivo: " + e.getMessage());
+            System.out.println("Error al procesar el archivo: " + e.getMessage());
             return;
         }
 
         if (archivoOriginal.delete() && archivoTemporal.renameTo(archivoOriginal)) {
             if (eliminado) {
-                System.out.println("✅ Venta eliminada con éxito.");
+                System.out.println("Venta eliminada con éxito.");
             } else {
-                System.out.println("⚠️ No se encontró una venta con ese ID.");
+                System.out.println("No se encontró una venta con ese ID.");
             }
         } else {
-            System.out.println("❌ Error al actualizar el archivo.");
+            System.out.println("Error al actualizar el archivo.");
         }
     }
     public static void verVentas() {
@@ -185,7 +185,7 @@ public class Venta {
             String linea;
             while ((linea = reader.readLine()) != null) {
                 String[] partes = linea.split(";");
-                System.out.println("🧾 ID: " + partes[0] + " | Cliente: " + partes[1] + " | Fecha: " + partes[2] + " | Pago: " + partes[3]);
+                System.out.println("ID: " + partes[0] + " | Cliente: " + partes[1] + " | Fecha: " + partes[2] + " | Pago: " + partes[3]);
 
                 if (partes.length > 4 && !partes[4].equals("[]")) {
                     System.out.println("   Productos:");
@@ -204,11 +204,11 @@ public class Venta {
                             totalVenta += Double.parseDouble(totalItem);
                         }
                     }
-                    System.out.println("   💰 Total venta: $" + totalVenta);
+                    System.out.println("Total venta: $" + totalVenta);
                 }
             }
         } catch (IOException e) {
-            System.out.println("❌ Error al leer ventas: " + e.getMessage());
+            System.out.println("Error al leer ventas: " + e.getMessage());
         }
     }
 

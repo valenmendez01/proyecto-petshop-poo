@@ -46,13 +46,6 @@ public abstract class Producto {
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
-    public void anadirStock(int cantidad) {
-        this.stock += cantidad;
-    }
-    public void restartStock(int cantidad) {
-        this.stock -= cantidad;
-    }
-    public abstract String getProductDescription();
 
     @Override
     public String toString() {
@@ -81,7 +74,7 @@ public abstract class Producto {
         System.out.print("Ingrese '1' para Artículo Vario o '2' para Alimento de Mascota: ");
         int tipo = Integer.parseInt(scanner.nextLine());
 
-        Producto nuevoProducto = null;
+        Producto nuevoProducto;
 
         if (tipo == 1) {
             System.out.print("Marca: ");
