@@ -179,8 +179,8 @@ El sistema mantiene la integridad de los datos:
 ## 👥 Autor
 
 **Tu Nombre**
-- GitHub: [@tu-usuario](https://github.com/tu-usuario)
-- LinkedIn: [Tu Perfil](https://linkedin.com/in/tu-perfil)
+- GitHub: @valenmendez01
+- LinkedIn: https://www.linkedin.com/in/valentin-mendez/
 
 ## 📝 Licencia
 
